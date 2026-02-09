@@ -1,0 +1,436 @@
+[
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T01:32:09.992800Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T01:32:08.695900Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 30888,
+              "ulVolume": 10366,
+              "dlVolume": 20522,
+              "totalNbOfPackets": 106,
+              "ulNbOfPackets": 54,
+              "dlNbOfPackets": 52
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "63943 bps",
+              "dlThroughput": "126591 bps",
+              "ulPacketThroughput": "41.64 pps",
+              "dlPacketThroughput": "40.10 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-53f6b241e3ff",
+    "appLabel": "reddit_browse",
+    "duration": 1.297
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T01:32:14.541200Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T01:32:10.001300Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 2847467,
+              "ulVolume": 62758,
+              "dlVolume": 2784709,
+              "totalNbOfPackets": 3038,
+              "ulNbOfPackets": 700,
+              "dlNbOfPackets": 2338
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "110589 bps",
+              "dlThroughput": "4907084 bps",
+              "ulPacketThroughput": "154.19 pps",
+              "dlPacketThroughput": "514.99 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-0ca10251e53e",
+    "appLabel": "reddit_browse",
+    "duration": 4.54
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T01:32:19.240600Z",
+        "ueIpv4Addr": "127.0.0.1",
+        "startTime": "2019-03-16T01:32:15.742800Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 35776313,
+              "ulVolume": 60370,
+              "dlVolume": 35715943,
+              "totalNbOfPackets": 4215,
+              "ulNbOfPackets": 59,
+              "dlNbOfPackets": 4156
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "138075 bps",
+              "dlThroughput": "81687785 bps",
+              "ulPacketThroughput": "16.87 pps",
+              "dlPacketThroughput": "1188.18 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-eccec06c0138",
+    "appLabel": "reddit_browse",
+    "duration": 3.498
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T01:32:20.881800Z",
+        "ueIpv4Addr": "127.0.0.1",
+        "startTime": "2019-03-16T01:32:20.842200Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 136,
+              "ulVolume": 0,
+              "dlVolume": 136,
+              "totalNbOfPackets": 2,
+              "ulNbOfPackets": 0,
+              "dlNbOfPackets": 2
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "0 bps",
+              "dlThroughput": "27475 bps",
+              "ulPacketThroughput": "0.00 pps",
+              "dlPacketThroughput": "50.51 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-8edc455b9c78",
+    "appLabel": "reddit_browse",
+    "duration": 0.04
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T01:32:29.588800Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T01:32:26.913700Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 615,
+              "ulVolume": 468,
+              "dlVolume": 147,
+              "totalNbOfPackets": 7,
+              "ulNbOfPackets": 5,
+              "dlNbOfPackets": 2
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "1400 bps",
+              "dlThroughput": "440 bps",
+              "ulPacketThroughput": "1.87 pps",
+              "dlPacketThroughput": "0.75 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-7679cb9df3be",
+    "appLabel": "reddit_browse",
+    "duration": 2.675
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T01:32:30.310500Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T01:32:30.252600Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 481428,
+              "ulVolume": 8054,
+              "dlVolume": 473374,
+              "totalNbOfPackets": 493,
+              "ulNbOfPackets": 115,
+              "dlNbOfPackets": 378
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "1112816 bps",
+              "dlThroughput": "65405788 bps",
+              "ulPacketThroughput": "1986.18 pps",
+              "dlPacketThroughput": "6528.50 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-6df0e8e4ab52",
+    "appLabel": "reddit_browse",
+    "duration": 0.058
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T04:01:59.991400Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T04:01:59.547400Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 33479,
+              "ulVolume": 8451,
+              "dlVolume": 25028,
+              "totalNbOfPackets": 111,
+              "ulNbOfPackets": 59,
+              "dlNbOfPackets": 52
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "152270 bps",
+              "dlThroughput": "450955 bps",
+              "ulPacketThroughput": "132.88 pps",
+              "dlPacketThroughput": "117.12 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-64de007999db",
+    "appLabel": "reddit_browse",
+    "duration": 0.444
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T04:02:04.997100Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T04:02:00.005300Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 153790,
+              "ulVolume": 26221,
+              "dlVolume": 127569,
+              "totalNbOfPackets": 384,
+              "ulNbOfPackets": 202,
+              "dlNbOfPackets": 182
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "42023 bps",
+              "dlThroughput": "204446 bps",
+              "ulPacketThroughput": "40.47 pps",
+              "dlPacketThroughput": "36.46 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-36939b5e11c3",
+    "appLabel": "reddit_browse",
+    "duration": 4.992
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T04:02:09.999500Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T04:02:05.279700Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 11283406,
+              "ulVolume": 14805,
+              "dlVolume": 11268601,
+              "totalNbOfPackets": 2150,
+              "ulNbOfPackets": 211,
+              "dlNbOfPackets": 1939
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "25094 bps",
+              "dlThroughput": "19100133 bps",
+              "ulPacketThroughput": "44.71 pps",
+              "dlPacketThroughput": "410.82 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-77a9470cd477",
+    "appLabel": "reddit_browse",
+    "duration": 4.72
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T04:02:13.947800Z",
+        "ueIpv4Addr": "127.0.0.1",
+        "startTime": "2019-03-16T04:02:10.000100Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 2887510,
+              "ulVolume": 68,
+              "dlVolume": 2887442,
+              "totalNbOfPackets": 291,
+              "ulNbOfPackets": 1,
+              "dlNbOfPackets": 290
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "138 bps",
+              "dlThroughput": "5851391 bps",
+              "ulPacketThroughput": "0.25 pps",
+              "dlPacketThroughput": "73.46 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-cc625484efa4",
+    "appLabel": "reddit_browse",
+    "duration": 3.948
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T04:02:19.004300Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T04:02:18.964000Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 136,
+              "ulVolume": 68,
+              "dlVolume": 68,
+              "totalNbOfPackets": 2,
+              "ulNbOfPackets": 1,
+              "dlNbOfPackets": 1
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "13499 bps",
+              "dlThroughput": "13499 bps",
+              "ulPacketThroughput": "24.81 pps",
+              "dlPacketThroughput": "24.81 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-a19b88bdab4b",
+    "appLabel": "reddit_browse",
+    "duration": 0.04
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T04:12:34.837700Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T04:12:31.286600Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 160688,
+              "ulVolume": 30424,
+              "dlVolume": 130264,
+              "totalNbOfPackets": 376,
+              "ulNbOfPackets": 194,
+              "dlNbOfPackets": 182
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "68540 bps",
+              "dlThroughput": "293462 bps",
+              "ulPacketThroughput": "54.63 pps",
+              "dlPacketThroughput": "51.25 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-0c8d37ac90a5",
+    "appLabel": "reddit_browse",
+    "duration": 3.551
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T04:12:39.981900Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T04:12:35.366500Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 6311772,
+              "ulVolume": 21545,
+              "dlVolume": 6290227,
+              "totalNbOfPackets": 1386,
+              "ulNbOfPackets": 249,
+              "dlNbOfPackets": 1137
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "37345 bps",
+              "dlThroughput": "10903024 bps",
+              "ulPacketThroughput": "53.95 pps",
+              "dlPacketThroughput": "246.35 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-d383acefde0c",
+    "appLabel": "reddit_browse",
+    "duration": 4.615
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T04:12:43.710800Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T04:12:40.075000Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 7915735,
+              "ulVolume": 235,
+              "dlVolume": 7915500,
+              "totalNbOfPackets": 1122,
+              "ulNbOfPackets": 3,
+              "dlNbOfPackets": 1119
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "517 bps",
+              "dlThroughput": "17416800 bps",
+              "ulPacketThroughput": "0.83 pps",
+              "dlPacketThroughput": "307.77 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-ee1c512259c8",
+    "appLabel": "reddit_browse",
+    "duration": 3.636
+  }
+]

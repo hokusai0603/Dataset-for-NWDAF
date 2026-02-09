@@ -1,0 +1,684 @@
+[
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:04:44.991400Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:04:44.913700Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1091,
+              "ulVolume": 352,
+              "dlVolume": 739,
+              "totalNbOfPackets": 7,
+              "ulNbOfPackets": 3,
+              "dlNbOfPackets": 4
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "36242 bps",
+              "dlThroughput": "76088 bps",
+              "ulPacketThroughput": "38.61 pps",
+              "dlPacketThroughput": "51.48 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-6f45480a912b",
+    "appLabel": "hulu_watch-video",
+    "duration": 0.078
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:04:49.986300Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:04:45.007200Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 358859,
+              "ulVolume": 66112,
+              "dlVolume": 292747,
+              "totalNbOfPackets": 599,
+              "ulNbOfPackets": 287,
+              "dlNbOfPackets": 312
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "106223 bps",
+              "dlThroughput": "470361 bps",
+              "ulPacketThroughput": "57.64 pps",
+              "dlPacketThroughput": "62.66 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-dbee1370ed4d",
+    "appLabel": "hulu_watch-video",
+    "duration": 4.979
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:04:52.181900Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:04:50.051300Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 23955,
+              "ulVolume": 22147,
+              "dlVolume": 1808,
+              "totalNbOfPackets": 48,
+              "ulNbOfPackets": 31,
+              "dlNbOfPackets": 17
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "83158 bps",
+              "dlThroughput": "6789 bps",
+              "ulPacketThroughput": "14.55 pps",
+              "dlPacketThroughput": "7.98 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-819197559220",
+    "appLabel": "hulu_watch-video",
+    "duration": 2.131
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:04:59.999900Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:04:55.050900Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1646830,
+              "ulVolume": 152500,
+              "dlVolume": 1494330,
+              "totalNbOfPackets": 2118,
+              "ulNbOfPackets": 866,
+              "dlNbOfPackets": 1252
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "246514 bps",
+              "dlThroughput": "2415567 bps",
+              "ulPacketThroughput": "174.98 pps",
+              "dlPacketThroughput": "252.98 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-cbca74774596",
+    "appLabel": "hulu_watch-video",
+    "duration": 4.949
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:05:04.949300Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:05:00Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 2374532,
+              "ulVolume": 71992,
+              "dlVolume": 2302540,
+              "totalNbOfPackets": 2215,
+              "ulNbOfPackets": 603,
+              "dlNbOfPackets": 1612
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "116367 bps",
+              "dlThroughput": "3721803 bps",
+              "ulPacketThroughput": "121.84 pps",
+              "dlPacketThroughput": "325.70 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-f7119eb6b8e1",
+    "appLabel": "hulu_watch-video",
+    "duration": 4.949
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:05:08.969600Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:05:05.083800Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 572083,
+              "ulVolume": 12198,
+              "dlVolume": 559885,
+              "totalNbOfPackets": 556,
+              "ulNbOfPackets": 177,
+              "dlNbOfPackets": 379
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "25113 bps",
+              "dlThroughput": "1152679 bps",
+              "ulPacketThroughput": "45.55 pps",
+              "dlPacketThroughput": "97.53 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-1db394da3d59",
+    "appLabel": "hulu_watch-video",
+    "duration": 3.886
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:05:14.921900Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:05:11.162000Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 600319,
+              "ulVolume": 13500,
+              "dlVolume": 586819,
+              "totalNbOfPackets": 576,
+              "ulNbOfPackets": 173,
+              "dlNbOfPackets": 403
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "28724 bps",
+              "dlThroughput": "1248584 bps",
+              "ulPacketThroughput": "46.01 pps",
+              "dlPacketThroughput": "107.18 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-1905ac85d400",
+    "appLabel": "hulu_watch-video",
+    "duration": 3.76
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:05:15.120000Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:05:15.039500Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 40860,
+              "ulVolume": 280,
+              "dlVolume": 40580,
+              "totalNbOfPackets": 33,
+              "ulNbOfPackets": 5,
+              "dlNbOfPackets": 28
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "27826 bps",
+              "dlThroughput": "4032801 bps",
+              "ulPacketThroughput": "62.11 pps",
+              "dlPacketThroughput": "347.83 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-740c6a759a62",
+    "appLabel": "hulu_watch-video",
+    "duration": 0.08
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:11:04.909000Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:11:01.615900Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 292258,
+              "ulVolume": 35785,
+              "dlVolume": 256473,
+              "totalNbOfPackets": 424,
+              "ulNbOfPackets": 157,
+              "dlNbOfPackets": 267
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "86933 bps",
+              "dlThroughput": "623056 bps",
+              "ulPacketThroughput": "47.68 pps",
+              "dlPacketThroughput": "81.08 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-093abf41739a",
+    "appLabel": "hulu_watch-video",
+    "duration": 3.293
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:11:07.997500Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:11:05.037900Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 59443,
+              "ulVolume": 43032,
+              "dlVolume": 16411,
+              "totalNbOfPackets": 125,
+              "ulNbOfPackets": 66,
+              "dlNbOfPackets": 59
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "116318 bps",
+              "dlThroughput": "44360 bps",
+              "ulPacketThroughput": "22.30 pps",
+              "dlPacketThroughput": "19.94 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-56c4bfb6b47a",
+    "appLabel": "hulu_watch-video",
+    "duration": 2.96
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:11:14.991300Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:11:11.897600Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 594962,
+              "ulVolume": 100435,
+              "dlVolume": 494527,
+              "totalNbOfPackets": 1020,
+              "ulNbOfPackets": 453,
+              "dlNbOfPackets": 567
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "259715 bps",
+              "dlThroughput": "1278797 bps",
+              "ulPacketThroughput": "146.43 pps",
+              "dlPacketThroughput": "183.28 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-2189962313f4",
+    "appLabel": "hulu_watch-video",
+    "duration": 3.094
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:11:19.986400Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:11:15.055700Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 2192781,
+              "ulVolume": 102463,
+              "dlVolume": 2090318,
+              "totalNbOfPackets": 2369,
+              "ulNbOfPackets": 885,
+              "dlNbOfPackets": 1484
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "166245 bps",
+              "dlThroughput": "3391515 bps",
+              "ulPacketThroughput": "179.49 pps",
+              "dlPacketThroughput": "300.97 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-b266205b7e9f",
+    "appLabel": "hulu_watch-video",
+    "duration": 4.931
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:11:24.990000Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:11:20.015600Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 719625,
+              "ulVolume": 23223,
+              "dlVolume": 696402,
+              "totalNbOfPackets": 759,
+              "ulNbOfPackets": 250,
+              "dlNbOfPackets": 509
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "37348 bps",
+              "dlThroughput": "1119977 bps",
+              "ulPacketThroughput": "50.26 pps",
+              "dlPacketThroughput": "102.32 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-e6c4ee92899a",
+    "appLabel": "hulu_watch-video",
+    "duration": 4.974
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:11:29.989000Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:11:25.048500Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 395073,
+              "ulVolume": 13231,
+              "dlVolume": 381842,
+              "totalNbOfPackets": 427,
+              "ulNbOfPackets": 161,
+              "dlNbOfPackets": 266
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "21425 bps",
+              "dlThroughput": "618305 bps",
+              "ulPacketThroughput": "32.59 pps",
+              "dlPacketThroughput": "53.84 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-351490efdb81",
+    "appLabel": "hulu_watch-video",
+    "duration": 4.941
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:11:31.194600Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:11:30.063100Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 283494,
+              "ulVolume": 11793,
+              "dlVolume": 271701,
+              "totalNbOfPackets": 278,
+              "ulNbOfPackets": 84,
+              "dlNbOfPackets": 194
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "83380 bps",
+              "dlThroughput": "1920997 bps",
+              "ulPacketThroughput": "74.24 pps",
+              "dlPacketThroughput": "171.45 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-40e0fd0eb398",
+    "appLabel": "hulu_watch-video",
+    "duration": 1.132
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:22:39.976700Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:22:38.463200Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 74956,
+              "ulVolume": 17825,
+              "dlVolume": 57131,
+              "totalNbOfPackets": 172,
+              "ulNbOfPackets": 77,
+              "dlNbOfPackets": 95
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "94219 bps",
+              "dlThroughput": "301981 bps",
+              "ulPacketThroughput": "50.88 pps",
+              "dlPacketThroughput": "62.77 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-5e34fd845607",
+    "appLabel": "hulu_watch-video",
+    "duration": 1.513
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:22:44.432100Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:22:40.002900Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 303435,
+              "ulVolume": 67677,
+              "dlVolume": 235758,
+              "totalNbOfPackets": 474,
+              "ulNbOfPackets": 215,
+              "dlNbOfPackets": 259
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "122238 bps",
+              "dlThroughput": "425825 bps",
+              "ulPacketThroughput": "48.54 pps",
+              "dlPacketThroughput": "58.48 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-5743a48fcaa2",
+    "appLabel": "hulu_watch-video",
+    "duration": 4.429
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:22:49.986100Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:22:45.023700Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 65871,
+              "ulVolume": 33589,
+              "dlVolume": 32282,
+              "totalNbOfPackets": 153,
+              "ulNbOfPackets": 79,
+              "dlNbOfPackets": 74
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "54150 bps",
+              "dlThroughput": "52043 bps",
+              "ulPacketThroughput": "15.92 pps",
+              "dlPacketThroughput": "14.91 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-c0130a952103",
+    "appLabel": "hulu_watch-video",
+    "duration": 4.962
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:22:54.999200Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:22:50.011900Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1900736,
+              "ulVolume": 158105,
+              "dlVolume": 1742631,
+              "totalNbOfPackets": 2486,
+              "ulNbOfPackets": 1052,
+              "dlNbOfPackets": 1434
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "253612 bps",
+              "dlThroughput": "2795310 bps",
+              "ulPacketThroughput": "210.94 pps",
+              "dlPacketThroughput": "287.53 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-4c34e3f7d345",
+    "appLabel": "hulu_watch-video",
+    "duration": 4.987
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:22:59.454300Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:22:55.000600Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 2039766,
+              "ulVolume": 37840,
+              "dlVolume": 2001926,
+              "totalNbOfPackets": 1830,
+              "ulNbOfPackets": 474,
+              "dlNbOfPackets": 1356
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "67970 bps",
+              "dlThroughput": "3595978 bps",
+              "ulPacketThroughput": "106.43 pps",
+              "dlPacketThroughput": "304.47 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-f0c03da99cc2",
+    "appLabel": "hulu_watch-video",
+    "duration": 4.454
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:23:04.943500Z",
+        "ueIpv4Addr": "192.168.1.64",
+        "startTime": "2019-03-20T16:23:01.747900Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 568521,
+              "ulVolume": 8718,
+              "dlVolume": 559803,
+              "totalNbOfPackets": 512,
+              "ulNbOfPackets": 135,
+              "dlNbOfPackets": 377
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "21825 bps",
+              "dlThroughput": "1401434 bps",
+              "ulPacketThroughput": "42.25 pps",
+              "dlPacketThroughput": "117.97 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-631f6fa8da6d",
+    "appLabel": "hulu_watch-video",
+    "duration": 3.196
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-20T16:23:08.179100Z",
+        "ueIpv4Addr": "192.168.1.88",
+        "startTime": "2019-03-20T16:23:05.022200Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 638865,
+              "ulVolume": 11853,
+              "dlVolume": 627012,
+              "totalNbOfPackets": 576,
+              "ulNbOfPackets": 150,
+              "dlNbOfPackets": 426
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "30037 bps",
+              "dlThroughput": "1588931 bps",
+              "ulPacketThroughput": "47.51 pps",
+              "dlPacketThroughput": "134.94 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-1fef39932992",
+    "appLabel": "hulu_watch-video",
+    "duration": 3.157
+  }
+]

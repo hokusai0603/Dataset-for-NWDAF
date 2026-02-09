@@ -1,0 +1,591 @@
+[
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T01:31:14.989700Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T01:31:10.911300Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 2093795,
+              "ulVolume": 104985,
+              "dlVolume": 1988810,
+              "totalNbOfPackets": 2412,
+              "ulNbOfPackets": 818,
+              "dlNbOfPackets": 1594
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "205934 bps",
+              "dlThroughput": "3901157 bps",
+              "ulPacketThroughput": "200.57 pps",
+              "dlPacketThroughput": "390.84 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-461dcd686c24",
+    "appLabel": "netflix_watch-video",
+    "duration": 4.078
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T01:31:18.454700Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T01:31:15.015800Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 15684547,
+              "ulVolume": 84213,
+              "dlVolume": 15600334,
+              "totalNbOfPackets": 12861,
+              "ulNbOfPackets": 706,
+              "dlNbOfPackets": 12155
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "195907 bps",
+              "dlThroughput": "36291451 bps",
+              "ulPacketThroughput": "205.30 pps",
+              "dlPacketThroughput": "3534.56 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-19281fdcd0d9",
+    "appLabel": "netflix_watch-video",
+    "duration": 3.439
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T01:31:20.359600Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T01:31:20.139100Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1807442,
+              "ulVolume": 13848,
+              "dlVolume": 1793594,
+              "totalNbOfPackets": 1580,
+              "ulNbOfPackets": 194,
+              "dlNbOfPackets": 1386
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "502422 bps",
+              "dlThroughput": "65073707 bps",
+              "ulPacketThroughput": "879.82 pps",
+              "dlPacketThroughput": "6285.71 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-d8483db0c885",
+    "appLabel": "netflix_watch-video",
+    "duration": 0.22
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T01:31:27.095200Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T01:31:26.720200Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 670,
+              "ulVolume": 670,
+              "dlVolume": 0,
+              "totalNbOfPackets": 4,
+              "ulNbOfPackets": 4,
+              "dlNbOfPackets": 0
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "14293 bps",
+              "dlThroughput": "0 bps",
+              "ulPacketThroughput": "10.67 pps",
+              "dlPacketThroughput": "0.00 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-ea522abb9790",
+    "appLabel": "netflix_watch-video",
+    "duration": 0.375
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T01:31:33.307000Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T01:31:32.672800Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1060,
+              "ulVolume": 383,
+              "dlVolume": 677,
+              "totalNbOfPackets": 6,
+              "ulNbOfPackets": 4,
+              "dlNbOfPackets": 2
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "4831 bps",
+              "dlThroughput": "8540 bps",
+              "ulPacketThroughput": "6.31 pps",
+              "dlPacketThroughput": "3.15 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-0a33003541f3",
+    "appLabel": "netflix_watch-video",
+    "duration": 0.634
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T01:31:38.378000Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T01:31:38.171800Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 516447,
+              "ulVolume": 5010,
+              "dlVolume": 511437,
+              "totalNbOfPackets": 447,
+              "ulNbOfPackets": 48,
+              "dlNbOfPackets": 399
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "194374 bps",
+              "dlThroughput": "19842355 bps",
+              "ulPacketThroughput": "232.78 pps",
+              "dlPacketThroughput": "1935.01 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-95e5ea84e955",
+    "appLabel": "netflix_watch-video",
+    "duration": 0.206
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:35:09.804800Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T03:35:05.262600Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 936514,
+              "ulVolume": 80801,
+              "dlVolume": 855713,
+              "totalNbOfPackets": 1363,
+              "ulNbOfPackets": 641,
+              "dlNbOfPackets": 722
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "142312 bps",
+              "dlThroughput": "1507134 bps",
+              "ulPacketThroughput": "141.12 pps",
+              "dlPacketThroughput": "158.95 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-367eb968d6d1",
+    "appLabel": "netflix_watch-video",
+    "duration": 4.542
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:35:13.510300Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T03:35:10.018600Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 22483606,
+              "ulVolume": 139174,
+              "dlVolume": 22344432,
+              "totalNbOfPackets": 18775,
+              "ulNbOfPackets": 1368,
+              "dlNbOfPackets": 17407
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "318868 bps",
+              "dlThroughput": "51194392 bps",
+              "ulPacketThroughput": "391.79 pps",
+              "dlPacketThroughput": "4985.25 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-0733b8f53070",
+    "appLabel": "netflix_watch-video",
+    "duration": 3.492
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:35:15.556500Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T03:35:15.231400Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1820527,
+              "ulVolume": 26428,
+              "dlVolume": 1794099,
+              "totalNbOfPackets": 1772,
+              "ulNbOfPackets": 379,
+              "dlNbOfPackets": 1393
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "650335 bps",
+              "dlThroughput": "44148860 bps",
+              "ulPacketThroughput": "1165.80 pps",
+              "dlPacketThroughput": "4284.84 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-169a3a7ae19a",
+    "appLabel": "netflix_watch-video",
+    "duration": 0.325
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:35:22.562000Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T03:35:22.166400Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 670,
+              "ulVolume": 670,
+              "dlVolume": 0,
+              "totalNbOfPackets": 4,
+              "ulNbOfPackets": 4,
+              "dlNbOfPackets": 0
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "13549 bps",
+              "dlThroughput": "0 bps",
+              "ulPacketThroughput": "10.11 pps",
+              "dlPacketThroughput": "0.00 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-8432e89b09f7",
+    "appLabel": "netflix_watch-video",
+    "duration": 0.396
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:35:29.176500Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T03:35:26.361800Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1038,
+              "ulVolume": 444,
+              "dlVolume": 594,
+              "totalNbOfPackets": 12,
+              "ulNbOfPackets": 5,
+              "dlNbOfPackets": 7
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "1262 bps",
+              "dlThroughput": "1688 bps",
+              "ulPacketThroughput": "1.78 pps",
+              "dlPacketThroughput": "2.49 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-9ade4d08cd69",
+    "appLabel": "netflix_watch-video",
+    "duration": 2.815
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:35:33.777500Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T03:35:33.612200Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 515127,
+              "ulVolume": 4998,
+              "dlVolume": 510129,
+              "totalNbOfPackets": 446,
+              "ulNbOfPackets": 48,
+              "dlNbOfPackets": 398
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "241888 bps",
+              "dlThroughput": "24688655 bps",
+              "ulPacketThroughput": "290.38 pps",
+              "dlPacketThroughput": "2407.75 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-2fafc6879390",
+    "appLabel": "netflix_watch-video",
+    "duration": 0.165
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:36:09.939700Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T03:36:07.590600Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 111640,
+              "ulVolume": 50550,
+              "dlVolume": 61090,
+              "totalNbOfPackets": 204,
+              "ulNbOfPackets": 123,
+              "dlNbOfPackets": 81
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "172151 bps",
+              "dlThroughput": "208046 bps",
+              "ulPacketThroughput": "52.36 pps",
+              "dlPacketThroughput": "34.48 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-abd374b786cf",
+    "appLabel": "netflix_watch-video",
+    "duration": 2.349
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:36:14.989200Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T03:36:10.062800Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 23264793,
+              "ulVolume": 185454,
+              "dlVolume": 23079339,
+              "totalNbOfPackets": 19980,
+              "ulNbOfPackets": 1994,
+              "dlNbOfPackets": 17986
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "301159 bps",
+              "dlThroughput": "37478626 bps",
+              "ulPacketThroughput": "404.76 pps",
+              "dlPacketThroughput": "3650.94 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-79c1b4626a4c",
+    "appLabel": "netflix_watch-video",
+    "duration": 4.926
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:36:19.380900Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T03:36:15.440900Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1815454,
+              "ulVolume": 21792,
+              "dlVolume": 1793662,
+              "totalNbOfPackets": 1698,
+              "ulNbOfPackets": 311,
+              "dlNbOfPackets": 1387
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "44248 bps",
+              "dlThroughput": "3641953 bps",
+              "ulPacketThroughput": "78.93 pps",
+              "dlPacketThroughput": "352.03 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-448a7ff5acb4",
+    "appLabel": "netflix_watch-video",
+    "duration": 3.94
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:36:23.760400Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T03:36:23.345000Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 670,
+              "ulVolume": 670,
+              "dlVolume": 0,
+              "totalNbOfPackets": 4,
+              "ulNbOfPackets": 4,
+              "dlNbOfPackets": 0
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "12903 bps",
+              "dlThroughput": "0 bps",
+              "ulPacketThroughput": "9.63 pps",
+              "dlPacketThroughput": "0.00 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-6bd586bfdb5a",
+    "appLabel": "netflix_watch-video",
+    "duration": 0.415
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:36:29.930800Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T03:36:27.191000Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 348,
+              "ulVolume": 283,
+              "dlVolume": 65,
+              "totalNbOfPackets": 4,
+              "ulNbOfPackets": 3,
+              "dlNbOfPackets": 1
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "826 bps",
+              "dlThroughput": "190 bps",
+              "ulPacketThroughput": "1.09 pps",
+              "dlPacketThroughput": "0.36 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-7acf1652a79d",
+    "appLabel": "netflix_watch-video",
+    "duration": 2.74
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:36:31.656700Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T03:36:31.653100Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 3972,
+              "ulVolume": 1184,
+              "dlVolume": 2788,
+              "totalNbOfPackets": 4,
+              "ulNbOfPackets": 2,
+              "dlNbOfPackets": 2
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "2631197 bps",
+              "dlThroughput": "6195758 bps",
+              "ulPacketThroughput": "555.57 pps",
+              "dlPacketThroughput": "555.57 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-26d2efe90be3",
+    "appLabel": "netflix_watch-video",
+    "duration": 0.004
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:36:35.878800Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T03:36:35.100200Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 514366,
+              "ulVolume": 5485,
+              "dlVolume": 508881,
+              "totalNbOfPackets": 453,
+              "ulNbOfPackets": 55,
+              "dlNbOfPackets": 398
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "56358 bps",
+              "dlThroughput": "5228677 bps",
+              "ulPacketThroughput": "70.64 pps",
+              "dlPacketThroughput": "511.17 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-960c85b56f21",
+    "appLabel": "netflix_watch-video",
+    "duration": 0.779
+  }
+]

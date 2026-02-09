@@ -1,0 +1,467 @@
+[
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T02:50:32.204500Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T02:50:31.004600Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 99766,
+              "ulVolume": 24879,
+              "dlVolume": 74887,
+              "totalNbOfPackets": 301,
+              "ulNbOfPackets": 153,
+              "dlNbOfPackets": 148
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "165874 bps",
+              "dlThroughput": "499288 bps",
+              "ulPacketThroughput": "127.51 pps",
+              "dlPacketThroughput": "123.34 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-0f8f72464163",
+    "appLabel": "dropbox_download",
+    "duration": 1.2
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T02:50:36.531700Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T02:50:36.373400Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1654,
+              "ulVolume": 934,
+              "dlVolume": 720,
+              "totalNbOfPackets": 5,
+              "ulNbOfPackets": 2,
+              "dlNbOfPackets": 3
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "47202 bps",
+              "dlThroughput": "36387 bps",
+              "ulPacketThroughput": "12.63 pps",
+              "dlPacketThroughput": "18.95 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-3ce5235f8d1d",
+    "appLabel": "dropbox_download",
+    "duration": 0.158
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T02:50:43.782800Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T02:50:43.632600Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1742,
+              "ulVolume": 727,
+              "dlVolume": 1015,
+              "totalNbOfPackets": 5,
+              "ulNbOfPackets": 2,
+              "dlNbOfPackets": 3
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "38722 bps",
+              "dlThroughput": "54061 bps",
+              "ulPacketThroughput": "13.32 pps",
+              "dlPacketThroughput": "19.97 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-2c1a708abf68",
+    "appLabel": "dropbox_download",
+    "duration": 0.15
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T02:50:49.986000Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T02:50:46.725700Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 6856,
+              "ulVolume": 3635,
+              "dlVolume": 3221,
+              "totalNbOfPackets": 26,
+              "ulNbOfPackets": 11,
+              "dlNbOfPackets": 15
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "8919 bps",
+              "dlThroughput": "7904 bps",
+              "ulPacketThroughput": "3.37 pps",
+              "dlPacketThroughput": "4.60 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-b18386522110",
+    "appLabel": "dropbox_download",
+    "duration": 3.26
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T02:50:52.066200Z",
+        "ueIpv4Addr": "10.145.167.113",
+        "startTime": "2019-03-16T02:50:50.024200Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 558736,
+              "ulVolume": 18260,
+              "dlVolume": 540476,
+              "totalNbOfPackets": 647,
+              "ulNbOfPackets": 193,
+              "dlNbOfPackets": 454
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "71538 bps",
+              "dlThroughput": "2117438 bps",
+              "ulPacketThroughput": "94.52 pps",
+              "dlPacketThroughput": "222.33 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-829bab583343",
+    "appLabel": "dropbox_download",
+    "duration": 2.042
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T02:50:33.128500Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T02:50:31.751200Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 93965,
+              "ulVolume": 23852,
+              "dlVolume": 70113,
+              "totalNbOfPackets": 283,
+              "ulNbOfPackets": 141,
+              "dlNbOfPackets": 142
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "138544 bps",
+              "dlThroughput": "407249 bps",
+              "ulPacketThroughput": "102.37 pps",
+              "dlPacketThroughput": "103.10 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-6f6e6153f679",
+    "appLabel": "dropbox_download",
+    "duration": 1.377
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T02:50:37.557300Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T02:50:37.375700Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1655,
+              "ulVolume": 934,
+              "dlVolume": 721,
+              "totalNbOfPackets": 5,
+              "ulNbOfPackets": 2,
+              "dlNbOfPackets": 3
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "41145 bps",
+              "dlThroughput": "31762 bps",
+              "ulPacketThroughput": "11.01 pps",
+              "dlPacketThroughput": "16.52 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-1d990a081cba",
+    "appLabel": "dropbox_download",
+    "duration": 0.182
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T02:50:44.722900Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T02:50:44.561000Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1742,
+              "ulVolume": 727,
+              "dlVolume": 1015,
+              "totalNbOfPackets": 5,
+              "ulNbOfPackets": 2,
+              "dlNbOfPackets": 3
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "35923 bps",
+              "dlThroughput": "50154 bps",
+              "ulPacketThroughput": "12.35 pps",
+              "dlPacketThroughput": "18.53 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-eb610116c08e",
+    "appLabel": "dropbox_download",
+    "duration": 0.162
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T02:50:48.399600Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T02:50:47.723700Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1531,
+              "ulVolume": 755,
+              "dlVolume": 776,
+              "totalNbOfPackets": 7,
+              "ulNbOfPackets": 3,
+              "dlNbOfPackets": 4
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "8936 bps",
+              "dlThroughput": "9185 bps",
+              "ulPacketThroughput": "4.44 pps",
+              "dlPacketThroughput": "5.92 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-8ac40be58ce8",
+    "appLabel": "dropbox_download",
+    "duration": 0.676
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T02:50:53.225600Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T02:50:50.789600Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 640687,
+              "ulVolume": 109800,
+              "dlVolume": 530887,
+              "totalNbOfPackets": 797,
+              "ulNbOfPackets": 287,
+              "dlNbOfPackets": 510
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "360591 bps",
+              "dlThroughput": "1743471 bps",
+              "ulPacketThroughput": "117.82 pps",
+              "dlPacketThroughput": "209.36 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-162ee1377d0a",
+    "appLabel": "dropbox_download",
+    "duration": 2.436
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:12:18.469200Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T03:12:17.087800Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 94662,
+              "ulVolume": 23573,
+              "dlVolume": 71089,
+              "totalNbOfPackets": 275,
+              "ulNbOfPackets": 138,
+              "dlNbOfPackets": 137
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "136517 bps",
+              "dlThroughput": "411693 bps",
+              "ulPacketThroughput": "99.90 pps",
+              "dlPacketThroughput": "99.17 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-c281f0cc3c78",
+    "appLabel": "dropbox_download",
+    "duration": 1.381
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:12:22.442800Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T03:12:22.251200Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1768,
+              "ulVolume": 946,
+              "dlVolume": 822,
+              "totalNbOfPackets": 6,
+              "ulNbOfPackets": 2,
+              "dlNbOfPackets": 4
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "39499 bps",
+              "dlThroughput": "34321 bps",
+              "ulPacketThroughput": "10.44 pps",
+              "dlPacketThroughput": "20.88 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-6da1df4a342b",
+    "appLabel": "dropbox_download",
+    "duration": 0.192
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:12:29.137500Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T03:12:28.987400Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1834,
+              "ulVolume": 815,
+              "dlVolume": 1019,
+              "totalNbOfPackets": 6,
+              "ulNbOfPackets": 3,
+              "dlNbOfPackets": 3
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "43438 bps",
+              "dlThroughput": "54310 bps",
+              "ulPacketThroughput": "19.99 pps",
+              "dlPacketThroughput": "19.99 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-ecfc602e9ff9",
+    "appLabel": "dropbox_download",
+    "duration": 0.15
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:12:32.820600Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T03:12:32.129600Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 1531,
+              "ulVolume": 755,
+              "dlVolume": 776,
+              "totalNbOfPackets": 7,
+              "ulNbOfPackets": 3,
+              "dlNbOfPackets": 4
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "8741 bps",
+              "dlThroughput": "8984 bps",
+              "ulPacketThroughput": "4.34 pps",
+              "dlPacketThroughput": "5.79 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-5df228200b2b",
+    "appLabel": "dropbox_download",
+    "duration": 0.691
+  },
+  {
+    "notificationItems": [
+      {
+        "eventType": "USER_DATA_USAGE_MEASURES",
+        "timeStamp": "2019-03-16T03:12:38.495900Z",
+        "ueIpv4Addr": "10.145.43.25",
+        "startTime": "2019-03-16T03:12:35.101800Z",
+        "userDataUsageMeasurements": [
+          {
+            "volumeMeasurement": {
+              "totalVolume": 558023,
+              "ulVolume": 19984,
+              "dlVolume": 538039,
+              "totalNbOfPackets": 640,
+              "ulNbOfPackets": 189,
+              "dlNbOfPackets": 451
+            },
+            "throughputMeasurement": {
+              "ulThroughput": "47103 bps",
+              "dlThroughput": "1268175 bps",
+              "ulPacketThroughput": "55.68 pps",
+              "dlPacketThroughput": "132.88 pps"
+            }
+          }
+        ]
+      }
+    ],
+    "correlationId": "corr-8b55e130eaea",
+    "appLabel": "dropbox_download",
+    "duration": 3.394
+  }
+]
