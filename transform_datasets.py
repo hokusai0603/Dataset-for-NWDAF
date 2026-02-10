@@ -2,22 +2,14 @@
 """
 Dataset Transformation Script for ANLF UEcommunication Inference
 
-Transforms MIRAGE-AppAct2024 and UTMobileNet2021 datasets to UPF-EES notify format.
+Transforms MIRAGE-AppAct2024 and UTMobileNet2021 datasets to CSV format
+with 1-second aggregation intervals.
 
-Target format:
-{
-  "notificationItems": [{
-    "eventType": "USER_DATA_USAGE_MEASURES",
-    "timeStamp": "...",
-    "ueIpv4Addr": "...",
-    "startTime": "...",
-    "userDataUsageMeasurements": [{
-      "volumeMeasurement": {...},
-      "throughputMeasurement": {...}
-    }]
-  }],
-  "correlationId": "..."
-}
+Output CSV columns:
+  correlationId, appLabel, duration, flowKey, eventType, timeStamp,
+  ueIpv4Addr, startTime, totalVolume, ulVolume, dlVolume,
+  totalNbOfPackets, ulNbOfPackets, dlNbOfPackets,
+  ulThroughput, dlThroughput, ulPacketThroughput, dlPacketThroughput
 """
 
 import os
@@ -33,10 +25,11 @@ import hashlib
 import re
 
 # Configuration
-DEFAULT_INTERVAL_SEC = 5  # Aggregation interval in seconds (default: 5s)
-MIRAGE_PATH = r"c:\Users\lcc04\Downloads\MIRAGE-AppAct-2024\MIRAGE-AppAct-2024"
-UTMOBILE_PATH = r"c:\Users\lcc04\Downloads\UTMobileNet2021\Deterministic Automated Data"
-OUTPUT_PATH = r"c:\Users\lcc04\Downloads\dataset\ees_training_data"
+DEFAULT_INTERVAL_SEC = 1  # Aggregation interval in seconds (default: 1s)
+SCRIPT_DIR = Path(__file__).resolve().parent
+MIRAGE_PATH = str(SCRIPT_DIR / ".." / "MIRAGE-AppAct-2024")
+UTMOBILE_PATH = str(SCRIPT_DIR / ".." / "UTMobileNet2021" / "Wild Test Data")
+OUTPUT_PATH = str(SCRIPT_DIR / "ees_training_data")
 
 
 def timestamp_to_iso(epoch: float) -> str:
@@ -467,8 +460,53 @@ def transform_utmobile(interval_sec: int = DEFAULT_INTERVAL_SEC) -> Dict[str, Li
     return results
 
 
+CSV_COLUMNS = [
+    "correlationId", "appLabel", "duration", "flowKey",
+    "eventType", "timeStamp", "ueIpv4Addr", "startTime",
+    "totalVolume", "ulVolume", "dlVolume",
+    "totalNbOfPackets", "ulNbOfPackets", "dlNbOfPackets",
+    "ulThroughput", "dlThroughput", "ulPacketThroughput", "dlPacketThroughput"
+]
+
+
+def flatten_record(record: Dict) -> Dict[str, Any]:
+    """Flatten a nested EES record into a flat dict for CSV output."""
+    item = record["notificationItems"][0]
+    vol = item["userDataUsageMeasurements"][0]["volumeMeasurement"]
+    thr = item["userDataUsageMeasurements"][0]["throughputMeasurement"]
+    return {
+        "correlationId": record.get("correlationId", ""),
+        "appLabel": record.get("appLabel", ""),
+        "duration": record.get("duration", ""),
+        "flowKey": record.get("flowKey", ""),
+        "eventType": item.get("eventType", ""),
+        "timeStamp": item.get("timeStamp", ""),
+        "ueIpv4Addr": item.get("ueIpv4Addr", ""),
+        "startTime": item.get("startTime", ""),
+        "totalVolume": vol.get("totalVolume", 0),
+        "ulVolume": vol.get("ulVolume", 0),
+        "dlVolume": vol.get("dlVolume", 0),
+        "totalNbOfPackets": vol.get("totalNbOfPackets", 0),
+        "ulNbOfPackets": vol.get("ulNbOfPackets", 0),
+        "dlNbOfPackets": vol.get("dlNbOfPackets", 0),
+        "ulThroughput": thr.get("ulThroughput", ""),
+        "dlThroughput": thr.get("dlThroughput", ""),
+        "ulPacketThroughput": thr.get("ulPacketThroughput", ""),
+        "dlPacketThroughput": thr.get("dlPacketThroughput", ""),
+    }
+
+
+def save_csv(filepath: str, records: List[Dict]):
+    """Save a list of EES records to a CSV file."""
+    with open(filepath, 'w', encoding='utf-8', newline='') as f:
+        writer = csv.DictWriter(f, fieldnames=CSV_COLUMNS)
+        writer.writeheader()
+        for record in records:
+            writer.writerow(flatten_record(record))
+
+
 def save_results(mirage_results: Dict, utmobile_results: Dict):
-    """Save transformed results to output directory."""
+    """Save transformed results to output directory as CSV files."""
     print("\n=== Saving Results ===")
     
     # Create output directories
@@ -479,25 +517,22 @@ def save_results(mirage_results: Dict, utmobile_results: Dict):
     
     # Save MIRAGE results
     for app_name, notifications in mirage_results.items():
-        output_file = os.path.join(OUTPUT_PATH, "mirage_transformed", f"{app_name}_ees.json")
-        with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump(notifications, f, indent=2, ensure_ascii=False)
+        output_file = os.path.join(OUTPUT_PATH, "mirage_transformed", f"{app_name}_ees.csv")
+        save_csv(output_file, notifications)
         print(f"Saved: {output_file} ({len(notifications)} records)")
         all_data.extend(notifications)
     
     # Save UTMobileNet results
     for app_name, notifications in utmobile_results.items():
-        output_file = os.path.join(OUTPUT_PATH, "utmobile_transformed", f"{app_name}_ees.json")
-        with open(output_file, 'w', encoding='utf-8') as f:
-            json.dump(notifications, f, indent=2, ensure_ascii=False)
+        output_file = os.path.join(OUTPUT_PATH, "utmobile_transformed", f"{app_name}_ees.csv")
+        save_csv(output_file, notifications)
         print(f"Saved: {output_file} ({len(notifications)} records)")
         all_data.extend(notifications)
     
     # Save combined dataset
     if all_data:
-        combined_file = os.path.join(OUTPUT_PATH, "combined_training_data.json")
-        with open(combined_file, 'w', encoding='utf-8') as f:
-            json.dump(all_data, f, indent=2, ensure_ascii=False)
+        combined_file = os.path.join(OUTPUT_PATH, "combined_training_data.csv")
+        save_csv(combined_file, all_data)
         print(f"\nCombined dataset: {combined_file} ({len(all_data)} total records)")
 
 
