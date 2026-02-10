@@ -595,11 +595,7 @@ def save_categorized_dataset(mirage_results: Dict, utmobile_results: Dict):
             
             all_records.extend(notifications)
     
-    # Save combined flat dataset for easy loading
-    if all_records:
-        combined_file = os.path.join(OUTPUT_PATH, "combined_training_data_v2.csv")
-        save_csv(combined_file, all_records)
-        print(f"\nSaved Combined Categorized Dataset: {combined_file} ({len(all_records)} total records)")
+
 
 
 def main():
