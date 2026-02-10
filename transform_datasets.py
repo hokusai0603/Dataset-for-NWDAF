@@ -494,6 +494,38 @@ def save_csv(filepath: str, records: List[Dict]):
             writer.writerow(flatten_record(record))
 
 
+CATEGORY_MAP = {
+    "Communication": [
+        "discord", "teams", "zoom", "skype", "slack", "messenger", "whatsapp",
+        "signal", "telegram", "webex", "meet", "jitsimeet", "gotomeeting",
+        "trueconf", "line", "kakaotalk", "hangout", "gmail", "hangouts"
+    ],
+    "Streaming": [
+        "youtube", "netflix", "hulu", "twitch", "crunchyroll", "spotify"
+    ],
+    "Social_Media": [
+        "facebook", "instagram", "twitter", "reddit", "pinterest", "omlet"
+    ],
+    "File_Transfer": [
+        "google-drive"
+    ],
+    "Gaming": [
+        "clashroyale"
+    ],
+    "Navigation": [
+        "google-maps"
+    ]
+}
+
+def get_category(app_name: str) -> str:
+    """Determine category for a given app name."""
+    normalized_name = app_name.lower().replace("_manual", "").replace("_", "")
+    for category, apps in CATEGORY_MAP.items():
+        for app_keyword in apps:
+            if app_keyword in normalized_name:
+                return category
+    return "Other"
+
 def save_results(mirage_results: Dict, utmobile_results: Dict):
     """Save transformed results to output directory as CSV files."""
     print("\n=== Saving Results ===")
@@ -525,6 +557,43 @@ def save_results(mirage_results: Dict, utmobile_results: Dict):
         print(f"\nCombined dataset: {combined_file} ({len(all_data)} total records)")
 
 
+def save_categorized_dataset(mirage_results: Dict, utmobile_results: Dict):
+    """Save transformed results to output directory organized by category."""
+    print("\n=== Saving Categorized Results ===")
+    
+    # Base directory for combined dataset
+    combined_dir = os.path.join(OUTPUT_PATH, "combined_dataset")
+    if os.path.exists(combined_dir):
+        # Safety cleanup to avoid stale files
+        import shutil
+        shutil.rmtree(combined_dir)
+    os.makedirs(combined_dir, exist_ok=True)
+    
+    all_records = []
+    
+    # Process both result sets
+    for source_name, results in [("MIRAGE", mirage_results), ("UTMobileNet", utmobile_results)]:
+        for app_name, notifications in results.items():
+            category = get_category(app_name)
+            
+            # Create category directory
+            category_dir = os.path.join(combined_dir, category)
+            os.makedirs(category_dir, exist_ok=True)
+            
+            # Save individual app file
+            output_file = os.path.join(category_dir, f"{app_name}_ees.csv")
+            save_csv(output_file, notifications)
+            print(f"Saved [{source_name}] to {category}: {os.path.basename(output_file)}")
+            
+            all_records.extend(notifications)
+    
+    # Save combined flat dataset for easy loading
+    if all_records:
+        combined_file = os.path.join(OUTPUT_PATH, "combined_training_data_v2.csv")
+        save_csv(combined_file, all_records)
+        print(f"\nSaved Combined Categorized Dataset: {combined_file} ({len(all_records)} total records)")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Transform datasets to UPF-EES format")
     parser.add_argument("--interval", type=int, default=DEFAULT_INTERVAL_SEC,
@@ -550,6 +619,7 @@ def main():
         utmobile_results = transform_utmobile(args.interval)
     
     save_results(mirage_results, utmobile_results)
+    save_categorized_dataset(mirage_results, utmobile_results)
     
     print("\n" + "=" * 60)
     print("Transformation complete!")
