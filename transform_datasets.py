@@ -179,18 +179,20 @@ def transform_mirage_flow(flow_key: str, flow_data: Dict, interval_sec: int) -> 
     
     notifications = []
     for interval_idx, data in sorted(filled_intervals.items()):
-        if data["end"] > 0:
-            duration_sec = data["end"] - data["start"] if data["end"] > data["start"] else interval_sec
-            item = create_notification_item(
-                ue_ip=ue_ip,
-                start_time=data["start"],
-                end_time=data["end"],
-                ul_bytes=data["ul_bytes"],
-                dl_bytes=data["dl_bytes"],
-                ul_packets=data["ul_packets"],
-                dl_packets=data["dl_packets"]
-            )
-            notifications.append((item, duration_sec))
+        # Align to interval boundaries for strict time-series
+        interval_start = interval_idx * interval_sec
+        interval_end = interval_start + interval_sec
+        
+        item = create_notification_item(
+            ue_ip=ue_ip,
+            start_time=interval_start,
+            end_time=interval_end,
+            ul_bytes=data["ul_bytes"],
+            dl_bytes=data["dl_bytes"],
+            ul_packets=data["ul_packets"],
+            dl_packets=data["dl_packets"]
+        )
+        notifications.append((item, float(interval_sec)))
     
     return notifications
 
@@ -299,13 +301,17 @@ def transform_utmobile_file(csv_path: str, app_name: str, interval_sec: int) -> 
     if not rows:
         return []
     
-    # First, group by flow (normalized IP pair), then by time interval
-    # Flow key: sorted(src_ip, dst_ip) to group bidirectional traffic
-    flows = defaultdict(lambda: defaultdict(lambda: {
+    # Group by time interval (aggregating all flows)
+    # Using dictionary: interval_idx -> metrics
+    intervals = defaultdict(lambda: {
         "ul_bytes": 0, "dl_bytes": 0, "ul_packets": 0, "dl_packets": 0,
         "start": float('inf'), "end": 0, "ue_ip": None
-    }))
+    })
     
+    # Track the UE IP seen most effectively (or first)
+    # In these datasets, usually one local IP is the UE.
+    detected_ue_ip = None
+
     for row in rows:
         try:
             time_str = row.get("frame.time", "")
@@ -316,105 +322,88 @@ def transform_utmobile_file(csv_path: str, app_name: str, interval_sec: int) -> 
             
             src_ip = row.get("ip.src", "") or ""
             dst_ip = row.get("ip.dst", "") or ""
-            
-            # Get ports if available for more precise flow identification
-            src_port = row.get("tcp.srcport", "") or row.get("udp.srcport", "") or "0"
-            dst_port = row.get("tcp.dstport", "") or row.get("udp.dstport", "") or "0"
         except (ValueError, TypeError):
             continue
         
         if ts == 0 or not src_ip or not dst_ip:
             continue
         
-        # Create normalized flow key (sorted IPs + ports for bidirectional matching)
-        # Format: "ip1:port1-ip2:port2" where ip1 < ip2
-        if src_ip < dst_ip:
-            flow_key = f"{src_ip}:{src_port}-{dst_ip}:{dst_port}"
-        else:
-            flow_key = f"{dst_ip}:{dst_port}-{src_ip}:{src_port}"
-        
         interval_idx = int(ts // interval_sec)
         
-        flows[flow_key][interval_idx]["start"] = min(flows[flow_key][interval_idx]["start"], ts)
-        flows[flow_key][interval_idx]["end"] = max(flows[flow_key][interval_idx]["end"], ts)
+        intervals[interval_idx]["start"] = min(intervals[interval_idx]["start"], ts)
+        intervals[interval_idx]["end"] = max(intervals[interval_idx]["end"], ts)
         
         # Determine direction: private IP = UE
         is_uplink = src_ip.startswith("192.168") or src_ip.startswith("10.")
         ue_ip = src_ip if is_uplink else dst_ip
         
-        if flows[flow_key][interval_idx]["ue_ip"] is None and ue_ip:
-            flows[flow_key][interval_idx]["ue_ip"] = ue_ip
+        if intervals[interval_idx]["ue_ip"] is None and ue_ip:
+            intervals[interval_idx]["ue_ip"] = ue_ip
+            if detected_ue_ip is None:
+                detected_ue_ip = ue_ip
         
         if is_uplink:
-            flows[flow_key][interval_idx]["ul_bytes"] += frame_len
-            flows[flow_key][interval_idx]["ul_packets"] += 1
+            intervals[interval_idx]["ul_bytes"] += frame_len
+            intervals[interval_idx]["ul_packets"] += 1
         else:
-            flows[flow_key][interval_idx]["dl_bytes"] += frame_len
-            flows[flow_key][interval_idx]["dl_packets"] += 1
+            intervals[interval_idx]["dl_bytes"] += frame_len
+            intervals[interval_idx]["dl_packets"] += 1
     
-    if not flows:
+    if not intervals:
         return []
     
-    all_notifications = []
+    # Fill gaps (Global for the file)
+    sorted_indices = sorted(intervals.keys())
+    filled_intervals = {}
     
-    # Process each flow separately
-    for flow_key, intervals in flows.items():
-        if not intervals:
-            continue
+    for i, idx in enumerate(sorted_indices):
+        filled_intervals[idx] = intervals[idx]
         
-        # Fill gaps within this flow
-        sorted_indices = sorted(intervals.keys())
-        filled_intervals = {}
-        default_ue_ip = None
-        
-        for idx in sorted_indices:
-            if intervals[idx]["ue_ip"]:
-                default_ue_ip = intervals[idx]["ue_ip"]
-                break
-        
-        for i, idx in enumerate(sorted_indices):
-            filled_intervals[idx] = intervals[idx]
+        if i < len(sorted_indices) - 1:
+            next_idx = sorted_indices[i + 1]
+            current_end = intervals[idx]["end"]
+            next_start = intervals[next_idx]["start"]
+            gap_sec = next_start - current_end
             
-            if i < len(sorted_indices) - 1:
-                next_idx = sorted_indices[i + 1]
-                current_end = intervals[idx]["end"]
-                next_start = intervals[next_idx]["start"]
-                gap_sec = next_start - current_end
-                
-                if gap_sec > 0 and gap_sec < MAX_GAP_SEC:
-                    for fill_idx in range(idx + 1, next_idx):
-                        fill_start = fill_idx * interval_sec
-                        fill_end = fill_start + interval_sec
-                        filled_intervals[fill_idx] = {
-                            "ul_bytes": 0, "dl_bytes": 0,
-                            "ul_packets": 0, "dl_packets": 0,
-                            "start": fill_start, "end": fill_end,
-                            "ue_ip": default_ue_ip
-                        }
-        
-        # Generate notifications for this flow
-        for interval_idx, data in sorted(filled_intervals.items()):
-            if data["end"] > 0:
-                duration_sec = data["end"] - data["start"] if data["end"] > data["start"] else interval_sec
-                item = create_notification_item(
-                    ue_ip=data["ue_ip"] or "10.60.0.1",
-                    start_time=data["start"],
-                    end_time=data["end"],
-                    ul_bytes=data["ul_bytes"],
-                    dl_bytes=data["dl_bytes"],
-                    ul_packets=data["ul_packets"],
-                    dl_packets=data["dl_packets"]
-                )
-                ees_record = {
-                    "notificationItems": [item],
-                    "correlationId": generate_correlation_id(app_name, flow_key, interval_idx),
-                    "appLabel": app_name,
-                    "duration": round(duration_sec, 3),
-                    "flowKey": flow_key  # Added for traceability
-                }
-                all_notifications.append(ees_record)
+            if gap_sec > 0 and gap_sec < MAX_GAP_SEC:
+                for fill_idx in range(idx + 1, next_idx):
+                    fill_start = fill_idx * interval_sec
+                    fill_end = fill_start + interval_sec
+                    filled_intervals[fill_idx] = {
+                        "ul_bytes": 0, "dl_bytes": 0,
+                        "ul_packets": 0, "dl_packets": 0,
+                        "start": fill_start, "end": fill_end,
+                        "ue_ip": detected_ue_ip
+                    }
     
-    return all_notifications
+    notifications = []
+    # Use empty flow key for aggregated data, similar to MIRAGE
+    flow_key = "" 
+    
+    for interval_idx, data in sorted(filled_intervals.items()):
+        # Align to interval boundaries
+        interval_start = interval_idx * interval_sec
+        interval_end = interval_start + interval_sec
+        
+        item = create_notification_item(
+            ue_ip=data["ue_ip"] or detected_ue_ip or "10.60.0.1",
+            start_time=interval_start,
+            end_time=interval_end,
+            ul_bytes=data["ul_bytes"],
+            dl_bytes=data["dl_bytes"],
+            ul_packets=data["ul_packets"],
+            dl_packets=data["dl_packets"]
+        )
+        ees_record = {
+            "notificationItems": [item],
+            "correlationId": generate_correlation_id(app_name, str(interval_idx), interval_idx), # Use idx as salt instead of flow
+            "appLabel": app_name,
+            "duration": round(float(interval_sec), 3),
+            "flowKey": flow_key
+        }
+        notifications.append(ees_record)
+    
+    return notifications
 
 
 def extract_app_from_filename(filename: str) -> str:
