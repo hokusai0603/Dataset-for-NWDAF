@@ -37,10 +37,9 @@ def timestamp_to_iso(epoch: float) -> str:
     return datetime.fromtimestamp(epoch, tz=timezone.utc).isoformat().replace("+00:00", "Z")
 
 
-def generate_correlation_id(app_name: str, flow_key: str, interval_idx: int) -> str:
-    """Generate a unique correlation ID."""
-    hash_input = f"{app_name}:{flow_key}:{interval_idx}"
-    return f"corr-{hashlib.md5(hash_input.encode()).hexdigest()[:12]}"
+def generate_correlation_id(unique_string: str) -> str:
+    """Generate a unique correlation ID from a unique string."""
+    return f"corr-{hashlib.md5(unique_string.encode()).hexdigest()[:12]}"
 
 
 def compute_throughput(volume_bytes: int, duration_sec: float) -> str:
@@ -212,10 +211,15 @@ def transform_mirage_file(json_path: str, app_name: str, interval_sec: int) -> L
     
     for flow_key, flow_data in data.items():
         notifications = transform_mirage_flow(flow_key, flow_data, interval_sec)
+        
+        # Consistent correlation ID for the entire flow (session)
+        flow_unique_string = f"{app_name}:{flow_key}"
+        correlation_id = generate_correlation_id(flow_unique_string)
+        
         for i, (item, duration_sec) in enumerate(notifications):
             ees_record = {
                 "notificationItems": [item],
-                "correlationId": generate_correlation_id(app_name, flow_key, i),
+                "correlationId": correlation_id,
                 "appLabel": app_name,  # For ANLF training
                 "duration": round(duration_sec, 3)  # Duration in seconds
             }
@@ -380,6 +384,10 @@ def transform_utmobile_file(csv_path: str, app_name: str, interval_sec: int) -> 
     # Use empty flow key for aggregated data, similar to MIRAGE
     flow_key = "" 
     
+    # Consistent correlation ID for the entire file (session)
+    session_unique_string = f"{app_name}:{os.path.basename(csv_path)}"
+    correlation_id = generate_correlation_id(session_unique_string)
+    
     for interval_idx, data in sorted(filled_intervals.items()):
         # Align to interval boundaries
         interval_start = interval_idx * interval_sec
@@ -396,7 +404,7 @@ def transform_utmobile_file(csv_path: str, app_name: str, interval_sec: int) -> 
         )
         ees_record = {
             "notificationItems": [item],
-            "correlationId": generate_correlation_id(app_name, str(interval_idx), interval_idx), # Use idx as salt instead of flow
+            "correlationId": correlation_id,
             "appLabel": app_name,
             "duration": round(float(interval_sec), 3),
             "flowKey": flow_key
