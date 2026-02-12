@@ -17,6 +17,15 @@ venv/
 Thumbs.db
 
 # Large Dataset Files
-ees_training_data/combined_training_data.csv
-ees_training_data/combined_training_data_v2.csv
-ees_training_data/combined_dataset/
+Combined_Dataset/
+*.rar
+*.zip
+
+# Generated Outputs
+simulated_ue_traffic.csv
+dataset_stats*.txt
+final_stats*.json
+stats_table.md
+
+# Legacy
+ees_training_data/

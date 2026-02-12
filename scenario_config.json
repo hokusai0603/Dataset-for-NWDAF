@@ -1,0 +1,24 @@
+{
+  "total_time": 289.964512,
+  "output_file": "simulated_ue_traffic.csv",
+  "flows": [
+    {
+      "category": "VoIP",
+      "app": null,
+      "start": 0.123456,
+      "duration": 120
+    },
+    {
+      "category": "Video_Streaming",
+      "app": null,
+      "start": 28.5614,
+      "duration": 180.231
+    },
+    {
+      "category": "File_Transfer",
+      "app": "dropbox",
+      "start": 60.256,
+      "duration": 45.5684
+    }
+  ]
+}
