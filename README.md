@@ -8,7 +8,7 @@ We harmonize two distinct datasets into a single, compatible format:
 1.  **MIRAGE-AppAct2024**: ~20 mobile apps (Discord, Zoom, etc.) with rich metadata.
 2.  **UTMobileNet2021**: ~27 apps (YouTube, Netflix, etc.) from controlled traces.
 ### Download link
-```lin
+```
 https://drive.google.com/file/d/1M5lToHDKnkRKKvDORA8NZUX1IziELbIP/view?usp=sharing
 ```
 ### Key Features

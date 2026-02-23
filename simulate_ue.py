@@ -160,8 +160,6 @@ def build_flow_packets(
             adj_ts = src_rel_ts + delta
 
             # Trim: only keep packets within [flow_start, flow_end]
-            if adj_ts < flow_start:
-                continue
             if adj_ts > flow_end:
                 break
 
