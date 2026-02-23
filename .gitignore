@@ -16,16 +16,26 @@ venv/
 .DS_Store
 Thumbs.db
 
-# Large Dataset Files
-Combined_Dataset/
+# Archives
 *.rar
 *.zip
+
+# Large Dataset (hosted on Google Drive)
+Combined_Dataset/
 
 # Generated Outputs
 simulated_ue_traffic.csv
 dataset_stats*.txt
 final_stats*.json
 stats_table.md
+
+# Temporary analysis files
+*_utf8.txt
+*_raw.txt
+*_report*.txt
+*_counts*.txt
+*_check*.txt
+*_mapping*.txt
 
 # Legacy
 ees_training_data/

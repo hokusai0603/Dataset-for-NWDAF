@@ -13,59 +13,118 @@ https://drive.google.com/file/d/1M5lToHDKnkRKKvDORA8NZUX1IziELbIP/view?usp=shari
 ```
 ### Key Features
 -   **Unified Schema**: Both datasets are mapped to a common set of 7 core metrics (see below).
--   **Microsecond Precision**: Time metrics (`relative_time`, `iat`) preserve 6-9 decimal places (microsecond to nanosecond scale).
+-   **Action-based Organization**: Files are organized by `<action>/<genre>/` for behavior-centric analysis.
+-   **Microsecond Precision**: Time metrics (`relative_time`, `iat`) preserve 6-9 decimal places.
 -   **Packet-Level Granularity**: No aggregation; every single packet is preserved as a row.
 -   **Session Alignment**: All sessions are rebased to start at `relative_time = 0.0`.
 
 ---
 
-## 2. Dataset Statistics
+## 2. Dataset Structure
 
-| Category | Sessions | Duration (h) | Size (MB) |
-| :--- | :--- | :--- | :--- |
-| Email | 127 | 0.47 | 14.80 |
-| File_Transfer | 500 | 3.01 | 271.63 |
-| Gaming | 451 | 7.79 | 27.03 |
-| Music_Streaming | 253 | 1.97 | 159.85 |
-| Navigation | 475 | 4.90 | 4,380.76 |
-| Social_Media | 1,054 | 7.53 | 1,349.75 |
-| Video_Streaming | 12,524 | 305.39 | 7,960.84 |
-| VoIP | 94,126 | 3,967.48 | 45,681.33 |
-| **TOTAL** | **109,510** | **4,298.54** | **59,846.00** |
+### Directory Layout
 
-*Note: Statistics exclude sessions with corrupt timestamps.*
+```
+Combined_Dataset/
+├── videocall/VoIP/               # 31,774 sessions
+├── audiocall/VoIP/               # 25,665 sessions
+├── video-streaming/
+│   ├── Video_Streaming/          # 10,845 sessions
+│   └── VoIP/                     #  2,500 sessions
+├── chat/VoIP/                    #  6,858 sessions
+├── browsing/
+│   ├── Social_Media/             #    656 sessions
+│   ├── Video_Streaming/          #    233 sessions
+│   └── Navigation/               #    209 sessions
+├── background/
+│   ├── VoIP/                     # 27,343 sessions
+│   ├── Video_Streaming/          #  1,339 sessions
+│   └── Gaming/                   #    142 sessions
+├── gaming-online/Gaming/         #    309 sessions
+├── social-post/Social_Media/     #    276 sessions
+├── upload/File_Transfer/         #    251 sessions
+├── download/
+│   ├── File_Transfer/            #    250 sessions
+│   └── Navigation/               #    126 sessions
+├── directions/Navigation/        #    142 sessions
+├── search/
+│   ├── Social_Media/             #    132 sessions
+│   ├── Music_Streaming/          #    126 sessions
+│   └── Video_Streaming/          #    115 sessions
+├── open-email/Email/             #    127 sessions
+└── music-streaming/Music_Streaming/ # 127 sessions
+```
 
----
+**Total: 109,545 sessions** (MIRAGE: 106,145 / UTMobileNet: 3,400)
 
-## 3. Dataset Structure (`Combined_Dataset`)
+### Unified Column Format (First 16 Columns)
 
-The `unify_datasets.py` script aggregates source files into `Combined_Dataset/<Category>/<Filename>.csv`.
-
-### Unified Column Format (First 14 Columns)
 Every CSV file starts with these standardized columns:
 
 | # | Column | Description |
 | :--- | :--- | :--- |
 | 1 | `source_dataset` | `MIRAGE` or `UTMobileNet` |
-| 2 | `app_name` | e.g. `Discord`, `YouTube` |
-| 3 | `category` | e.g. `VoIP`, `Video_Streaming` |
-| 4 | `activity` | e.g. `call`, `download` (if available) |
+| 2 | `app_name` | e.g. `Discord`, `youtube` |
+| 3 | `category` | Genre — e.g. `VoIP`, `Video_Streaming` |
+| 4 | `activity` | **Unified action** — e.g. `videocall`, `browsing` |
 | 5 | `session_id` | Unique identifier for the flow/session |
 | 6 | `session_duration`| Total duration of the session (seconds) |
-| 7 | `relative_time` | **Timestamp relative to session start (start=0.0)** |
+| 7 | `relative_time` | Timestamp relative to session start (start=0.0) |
 | 8 | `pkt_len` | Packet length in bytes |
 | 9 | `l4_proto` | Transport Protocol (6=TCP, 17=UDP) |
-| 10 | `src_port` | Source Port |
-| 11 | `dst_port` | Destination Port |
-| 12 | `tcp_flags` | TCP Flags string (e.g. "PA", "S", "F") |
-| 13 | `direction` | `0` = Uplink, `1` = Downlink |
-| 14 | `iat` | Inter-arrival time (seconds since prev packet) |
-
-*Note: Source-specific columns (like `ip.id` or `frame.cap_len`) are preserved after these 14 columns.*
+| 10 | `src_ip` | Source IP address |
+| 11 | `dst_ip` | Destination IP address |
+| 12 | `src_port` | Source Port |
+| 13 | `dst_port` | Destination Port |
+| 14 | `tcp_flags` | TCP Flags string (e.g. "PA", "S", "F") |
+| 15 | `direction` | `0` = Uplink, `1` = Downlink |
+| 16 | `iat` | Inter-arrival time (seconds since prev packet) |
 
 ---
 
-## 3. Workflow
+## 3. Action Unification
+
+Both datasets' raw action labels are mapped to **14 unified actions** via `ACTION_UNIFICATION_MAP` in `unify_datasets.py`.
+
+### 3.1 MIRAGE (from `BF_activity` field)
+
+Compound labels use the **primary-first rule**: in `X-Y`, X = primary activity.
+
+| Unified Action | Raw Labels | Justification |
+| :--- | :--- | :--- |
+| `videocall` | `videocall`, `chat-videocall`, `videocall-chat`, `videocall-audiocall` | Large-packet ratio 11–17% (video frames >1KB) |
+| `audiocall` | `audiocall`, `chat-audiocall`, `audiocall-chat`, `audiocall-videocall` | Large-packet ratio 7–10% (voice codecs <500B) |
+| `video-streaming` | `video-streaming`, `video on-demand` | UL Byte% ~30%, high large-pkt ratio, IAT <20ms |
+| `chat` | `chat` | Bidirectional small packets, high IAT (~0.46s) |
+| `gaming-online` | `gaming-online` | UL Byte% ~22%, very large packets |
+| `background` | `None`, `Unknown` | No labeled activity |
+
+> **Key distinction**: `videocall-audiocall` → `videocall` (large-pkt rate 11.5% > pure audiocall 10.3%), while `audiocall-videocall` → `audiocall` (large-pkt rate 10.3% = pure audiocall). Similarity scores: 88.8%–97.4%.
+
+### 3.2 UTMobileNet (from filename parsing)
+
+| Unified Action | Raw Labels | Apps |
+| :--- | :--- | :--- |
+| `browsing` | `scroll-newsfeed`, `browse`, `browse-home`, `scroll-home`, `scroll-feed`, `IgSearchBrowse`, `tap-board`, `explore` | facebook, reddit, hulu, netflix, instagram, pinterest, google-maps |
+| `video-streaming` | `watch-video`, `play-video` | hulu, netflix, youtube |
+| `chat` | `send-message`, `hangout` | messenger, hangout |
+| `search` | `search-page`, `search-music`, `catSearch` | facebook, spotify, youtube |
+| `download` | `download`, `download-map` | dropbox, google-drive, google-maps |
+| `upload` | `upload` | dropbox, google-drive |
+| `social-post` | `post`, `post-tweet` | reddit, twitter |
+| `music-streaming` | `play-music` | spotify |
+| `open-email` | `open-email` | gmail |
+| `directions` | `directions` | google-maps |
+
+### 3.3 Cross-Dataset Validation
+
+Two unified actions contain data from **both** datasets, confirming classification consistency:
+- **`video-streaming/Video_Streaming`**: MIRAGE 10,466 + UTM 379 sessions
+- **`chat/VoIP`**: MIRAGE 6,607 + UTM 251 sessions
+
+---
+
+## 4. Workflow
 
 ### Step 1: Generate Unified Dataset
 Run this script to process raw MIRAGE JSONs and UTMobileNet CSVs into the `Combined_Dataset` folder.
@@ -73,7 +132,7 @@ Run this script to process raw MIRAGE JSONs and UTMobileNet CSVs into the `Combi
 ```bash
 python unify_datasets.py
 ```
-*Output: `Combined_Dataset/` folder containing standardized CSVs organized by category.*
+*Output: `Combined_Dataset/<action>/<genre>/` folder containing standardized CSVs.*
 
 ### Step 2: Simulate UE Traffic
 Use `simulate_ue.py` to mix and match sessions from the unified dataset into a single, continuous user traffic stream based on a scenario config.
@@ -85,20 +144,20 @@ python simulate_ue.py scenario_config.json
 
 ---
 
-## 4. Simulation Configuration (`scenario_config.json`)
+## 5. Simulation Configuration (`scenario_config.json`)
 
 Define your traffic scenario in a JSON file:
 
 ```json
 {
-    "total_time": 300,              // Total simulation time in seconds
+    "total_time": 300,
     "output_file": "my_simulation.csv",
     "flows": [
         {
-            "category": "VoIP",     // Must match folder name in Combined_Dataset
-            "app": "Discord",       // Optional: specific app name filter
-            "start": 0.0,           // Start time (seconds)
-            "duration": 60.0        // Duration to sustain this flow
+            "category": "VoIP",
+            "app": "Discord",
+            "start": 0.0,
+            "duration": 60.0
         },
         {
             "category": "Video_Streaming",
@@ -117,7 +176,7 @@ Define your traffic scenario in a JSON file:
 
 ---
 
-## 5. Known Limitations
+## 6. Known Limitations
 
 ### UTMobileNet TCP Flags
 The raw UTMobileNet2021 dataset lacks a full hexadecimal TCP flags column and is missing several flag bits (SYN, ACK, PSH, RST).

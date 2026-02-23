@@ -3,11 +3,12 @@
 unify_datasets.py
 =================
 Consolidates MIRAGE-AppAct2024 (.json) and UTMobileNet2021 (.csv) into
-    Combined_Dataset/<Category>/<session_file>.csv
+    Combined_Dataset/<action>/<genre>/<session_file>.csv
 
 - No aggregation: every raw packet row is preserved.
 - Sessions are identified per-flow (MIRAGE) or per-file (UTMobileNet).
-- Apps are mapped to traffic categories (VoIP, Video_Streaming, etc.).
+- Actions are unified across datasets via ACTION_UNIFICATION_MAP.
+- Apps are mapped to traffic genres (VoIP, Video_Streaming, etc.).
 """
 
 import csv
@@ -35,7 +36,7 @@ MIRAGE_PACKET_FIELDS = [
 
 # ── unified columns ────────────────────────────────────────────────────
 UNIFIED_METRICS = [
-    "pkt_len", "l4_proto", "src_port", "dst_port", 
+    "pkt_len", "l4_proto", "src_ip", "dst_ip", "src_port", "dst_port", 
     "tcp_flags", "direction", "iat"
 ]
 
@@ -83,6 +84,66 @@ UTMOBILE_CATEGORY = {
     "twitter":      "Social_Media",
     "youtube":      "Video_Streaming",
 }
+
+# ── action unification ─────────────────────────────────────────────────
+# Maps raw action labels from both datasets to a unified action name.
+ACTION_UNIFICATION_MAP = {
+    # Video call variants → videocall
+    "videocall":            "videocall",
+    "chat-videocall":       "videocall",
+    "videocall-chat":       "videocall",
+    "videocall-audiocall":  "videocall",
+    # Audio call variants → audiocall
+    "audiocall":            "audiocall",
+    "chat-audiocall":       "audiocall",
+    "audiocall-chat":       "audiocall",
+    "audiocall-videocall":  "audiocall",
+    # Video streaming variants → video-streaming
+    "video-streaming":      "video-streaming",
+    "watch-video":          "video-streaming",
+    "play-video":           "video-streaming",
+    "video on-demand":      "video-streaming",
+    # Music streaming
+    "play-music":           "music-streaming",
+    "search-music":         "search",
+    # Browsing / scrolling variants → browsing
+    "browse":               "browsing",
+    "browse-home":          "browsing",
+    "scroll-home":          "browsing",
+    "scroll-feed":          "browsing",
+    "scroll-newsfeed":      "browsing",
+    "IgSearchBrowse":       "browsing",
+    "tap-board":            "browsing",
+    "explore":              "browsing",
+    # Search variants → search
+    "search-page":          "search",
+    "catSearch":            "search",
+    # Chat / messaging variants → chat
+    "chat":                 "chat",
+    "send-message":         "chat",
+    "hangout":              "chat",
+    # File transfer
+    "download":             "download",
+    "download-map":         "download",
+    "upload":               "upload",
+    # Social posting
+    "post":                 "social-post",
+    "post-tweet":           "social-post",
+    # Others
+    "gaming-online":        "gaming-online",
+    "open-email":           "open-email",
+    "directions":           "directions",
+}
+
+
+def unify_action(raw_action: str) -> str:
+    """Map a raw action label to its unified name.
+    Falls back to the original label (lowercased) if not in the map.
+    None/Unknown → 'background'.
+    """
+    if not raw_action or raw_action in ("None", "Unknown"):
+        return "background"
+    return ACTION_UNIFICATION_MAP.get(raw_action, raw_action.lower())
 
 
 # ── helpers ────────────────────────────────────────────────────────────
@@ -268,8 +329,6 @@ def process_mirage():
             app_label = jf.parent.name  # fall back to directory name
 
         category = MIRAGE_CATEGORY.get(app_label, "Other")
-        out_dir = OUTPUT_PATH / category
-        safe_mkdir(out_dir)
 
         try:
             with open(jf, "r", encoding="utf-8") as f:
@@ -289,11 +348,24 @@ def process_mirage():
             if n_pkts == 0:
                 continue
 
-            # Session info
+            # Session info — parse IPs from flow_key
+            # flow_key format: "src_ip,src_port,dst_ip,dst_port,protocol"
             session_id = flow_key
+            fk_parts = flow_key.split(",")
+            if len(fk_parts) >= 5:
+                flow_src_ip = fk_parts[0]
+                flow_dst_ip = fk_parts[2]
+            else:
+                flow_src_ip = ""
+                flow_dst_ip = ""
             session_start = ts_list[0]
             session_duration = meta.get("BF_duration", ts_list[-1] - ts_list[0])
             activity = meta.get("BF_activity", "")
+            unified_action = unify_action(str(activity) if activity else None)
+
+            # Build output directory: <action>/<genre>/
+            out_dir = OUTPUT_PATH / unified_action / category
+            safe_mkdir(out_dir)
 
             # Build output filename
             safe_sid = sanitize_filename(flow_key)
@@ -325,6 +397,8 @@ def process_mirage():
                     unified_row = [
                         pkt.get("IP_packet_bytes", [0])[i], # pkt_len
                         proto,                             # l4_proto
+                        flow_src_ip,                       # src_ip
+                        flow_dst_ip,                       # dst_ip
                         pkt.get("src_port", [0])[i],       # src_port
                         pkt.get("dst_port", [0])[i],       # dst_port
                         curr_flags,                        # tcp_flags
@@ -333,7 +407,7 @@ def process_mirage():
                     ]
 
                     row = [
-                        "MIRAGE", app_label, category, activity,
+                        "MIRAGE", app_label, category, unified_action,
                         session_id, session_duration, rel_time,
                     ] + unified_row
                     
@@ -368,7 +442,9 @@ def process_utmobile():
     for cf_path in csv_files:
         app, action = extract_utmobile_app_action(cf_path.name)
         category = UTMOBILE_CATEGORY.get(app, "Other")
-        out_dir = OUTPUT_PATH / category
+        unified_action = unify_action(action)
+
+        out_dir = OUTPUT_PATH / unified_action / category
         safe_mkdir(out_dir)
 
         session_id = cf_path.stem
@@ -459,9 +535,15 @@ def process_utmobile():
                         # Pass the pre-calculated dictionary of indices
                         mapped_flags = map_utmobile_tcp_flags(row, flag_indices)
 
+                        # IPs
+                        src_ip_val = row[src_ip_idx] if src_ip_idx is not None and src_ip_idx < len(row) else ""
+                        dst_ip_val = row[dst_ip_idx] if dst_ip_idx is not None and dst_ip_idx < len(row) else ""
+
                         unified_vals = [
                             row[pkt_len_idx] if pkt_len_idx is not None else "", # pkt_len
                             row[proto_idx] if proto_idx is not None else "",     # l4_proto
+                            src_ip_val,                                          # src_ip
+                            dst_ip_val,                                          # dst_ip
                             s_port,                                              # src_port
                             d_port,                                              # dst_port
                             mapped_flags,                                        # tcp_flags
@@ -470,7 +552,7 @@ def process_utmobile():
                         ]
 
                         meta_row = [
-                            "UTMobileNet", app, category, action,
+                            "UTMobileNet", app, category, unified_action,
                             session_id, session_duration, rel_time,
                         ] + unified_vals
                         writer.writerow(meta_row + row)
@@ -488,7 +570,7 @@ def process_utmobile():
 # ── main ───────────────────────────────────────────────────────────────
 def main():
     print("=" * 60)
-    print("Unify Datasets → Combined_Dataset/<Category>/")
+    print("Unify Datasets → Combined_Dataset/<action>/<genre>/")
     print("=" * 60)
     safe_mkdir(OUTPUT_PATH)
 
@@ -499,14 +581,24 @@ def main():
     # Summary
     print("\n" + "=" * 60)
     print("Output directory:", OUTPUT_PATH)
-    categories = sorted(
+    actions = sorted(
         d.name for d in OUTPUT_PATH.iterdir() if d.is_dir()
     )
-    print(f"Categories created: {len(categories)}")
-    for cat in categories:
-        cat_dir = OUTPUT_PATH / cat
-        n_files = len(list(cat_dir.glob("*.csv")))
-        print(f"  {cat}: {n_files} session files")
+    print(f"Actions created: {len(actions)}")
+    total_files = 0
+    for action in actions:
+        action_dir = OUTPUT_PATH / action
+        genres = sorted(g.name for g in action_dir.iterdir() if g.is_dir())
+        action_total = 0
+        for genre in genres:
+            n_files = len(list((action_dir / genre).glob("*.csv")))
+            action_total += n_files
+        total_files += action_total
+        print(f"  {action}/ ({action_total} files)")
+        for genre in genres:
+            n_files = len(list((action_dir / genre).glob("*.csv")))
+            print(f"    └─ {genre}: {n_files}")
+    print(f"Total files: {total_files}")
     print("=" * 60)
 
 
