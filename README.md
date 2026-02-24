@@ -1,22 +1,42 @@
 # Network Traffic Dataset & UE Simulator for NWDAF
 
-This project provides a unified, high-precision network traffic dataset and a simulation tool to generate realistic User Equipment (UE) traffic patterns for NWDAF (Network Data Analytics Function) research and training.
+A unified, packet-level network traffic dataset and simulation toolkit for NWDAF (Network Data Analytics Function) research.
+We harmonize **MIRAGE-AppAct2024** and **UTMobileNet2021** into a single schema, then provide tools to simulate multi-UE traffic scenarios and package them as UPF-EES notifications.
 
-## 1. Project Overview
+> **Dataset Download**: [Google Drive](https://drive.google.com/file/d/1M5lToHDKnkRKKvDORA8NZUX1IziELbIP/view?usp=sharing)
 
-We harmonize two distinct datasets into a single, compatible format:
-1.  **MIRAGE-AppAct2024**: ~20 mobile apps (Discord, Zoom, etc.) with rich metadata.
-2.  **UTMobileNet2021**: ~27 apps (YouTube, Netflix, etc.) from controlled traces.
-### Download link
-```
-https://drive.google.com/file/d/1M5lToHDKnkRKKvDORA8NZUX1IziELbIP/view?usp=sharing
-```
-### Key Features
--   **Unified Schema**: Both datasets are mapped to a common set of 7 core metrics (see below).
--   **Action-based Organization**: Files are organized by `<action>/<genre>/` for behavior-centric analysis.
--   **Microsecond Precision**: Time metrics (`relative_time`, `iat`) preserve 6-9 decimal places.
--   **Packet-Level Granularity**: No aggregation; every single packet is preserved as a row.
--   **Session Alignment**: All sessions are rebased to start at `relative_time = 0.0`.
+---
+
+## Table of Contents
+
+1. [Key Features](#1-key-features)
+2. [Dataset Structure](#2-dataset-structure)
+3. [Action Unification](#3-action-unification)
+4. [Workflow](#4-workflow)
+5. [Simulation Configuration](#5-simulation-configuration)
+6. [UPF-EES Notification Packager](#6-upf-ees-notification-packager)
+7. [Known Limitations](#7-known-limitations)
+
+---
+
+## 1. Key Features
+
+| Feature | Description |
+| :--- | :--- |
+| **Unified Schema** | Both datasets mapped to 16 standardized columns |
+| **Action-based Hierarchy** | Files organized as `<action>/<genre>/` for behavior-centric analysis |
+| **Microsecond Precision** | `relative_time` and `iat` preserve 6–9 decimal places |
+| **Packet-Level Granularity** | Every packet preserved as a row — no aggregation |
+| **Session Alignment** | All sessions rebased to `relative_time = 0.0` |
+| **Multi-UE Simulation** | Compose realistic UPF-scale traffic from real session data |
+| **UPF-EES Export** | Convert simulated traffic to 3GPP-compliant notification JSON |
+
+### Source Datasets
+
+| Dataset | Apps | Sessions | Description |
+| :--- | :---: | ---: | :--- |
+| **MIRAGE-AppAct2024** | ~20 | 106,145 | Discord, Zoom, Twitch, etc. — rich per-flow metadata from JSON |
+| **UTMobileNet2021** | ~27 | 3,400 | YouTube, Netflix, Spotify, etc. — controlled mobile traces from CSV |
 
 ---
 
@@ -26,59 +46,59 @@ https://drive.google.com/file/d/1M5lToHDKnkRKKvDORA8NZUX1IziELbIP/view?usp=shari
 
 ```
 Combined_Dataset/
-├── videocall/VoIP/               # 31,774 sessions
-├── audiocall/VoIP/               # 25,665 sessions
-├── video-streaming/
-│   ├── Video_Streaming/          # 10,845 sessions
-│   └── VoIP/                     #  2,500 sessions
-├── chat/VoIP/                    #  6,858 sessions
-├── browsing/
-│   ├── Social_Media/             #    656 sessions
-│   ├── Video_Streaming/          #    233 sessions
-│   └── Navigation/               #    209 sessions
+├── videocall/VoIP/                  # 31,774 sessions
+├── audiocall/VoIP/                  # 25,665 sessions
 ├── background/
-│   ├── VoIP/                     # 27,343 sessions
-│   ├── Video_Streaming/          #  1,339 sessions
-│   └── Gaming/                   #    142 sessions
-├── gaming-online/Gaming/         #    309 sessions
-├── social-post/Social_Media/     #    276 sessions
-├── upload/File_Transfer/         #    251 sessions
+│   ├── VoIP/                        # 27,343 sessions
+│   ├── Video_Streaming/             #  1,339 sessions
+│   └── Gaming/                      #    142 sessions
+├── video-streaming/
+│   ├── Video_Streaming/             # 10,845 sessions
+│   └── VoIP/                        #  2,500 sessions
+├── chat/VoIP/                       #  6,858 sessions
+├── browsing/
+│   ├── Social_Media/                #    656 sessions
+│   ├── Video_Streaming/             #    233 sessions
+│   └── Navigation/                  #    209 sessions
+├── gaming-online/Gaming/            #    309 sessions
+├── social-post/Social_Media/        #    276 sessions
+├── upload/File_Transfer/            #    251 sessions
 ├── download/
-│   ├── File_Transfer/            #    250 sessions
-│   └── Navigation/               #    126 sessions
-├── directions/Navigation/        #    142 sessions
+│   ├── File_Transfer/               #    250 sessions
+│   └── Navigation/                  #    126 sessions
+├── directions/Navigation/           #    142 sessions
 ├── search/
-│   ├── Social_Media/             #    132 sessions
-│   ├── Music_Streaming/          #    126 sessions
-│   └── Video_Streaming/          #    115 sessions
-├── open-email/Email/             #    127 sessions
-└── music-streaming/Music_Streaming/ # 127 sessions
+│   ├── Social_Media/                #    132 sessions
+│   ├── Music_Streaming/             #    126 sessions
+│   └── Video_Streaming/             #    115 sessions
+├── open-email/Email/                #    127 sessions
+└── music-streaming/Music_Streaming/ #    127 sessions
 ```
 
 **Total: 109,545 sessions** (MIRAGE: 106,145 / UTMobileNet: 3,400)
 
-### Unified Column Format (First 16 Columns)
+### Unified Column Format
 
-Every CSV file starts with these standardized columns:
+Every CSV file contains exactly these 16 standardized columns:
 
 | # | Column | Description |
-| :--- | :--- | :--- |
+| ---: | :--- | :--- |
 | 1 | `source_dataset` | `MIRAGE` or `UTMobileNet` |
 | 2 | `app_name` | e.g. `Discord`, `youtube` |
 | 3 | `category` | Genre — e.g. `VoIP`, `Video_Streaming` |
 | 4 | `activity` | **Unified action** — e.g. `videocall`, `browsing` |
 | 5 | `session_id` | Unique identifier for the flow/session |
-| 6 | `session_duration`| Total duration of the session (seconds) |
-| 7 | `relative_time` | Timestamp relative to session start (start=0.0) |
+| 6 | `session_duration` | Total duration of the session (seconds) |
+| 7 | `relative_time` | Timestamp relative to session start (start = 0.0) |
 | 8 | `pkt_len` | Packet length in bytes |
-| 9 | `l4_proto` | Transport Protocol (6=TCP, 17=UDP) |
+| 9 | `l4_proto` | Transport protocol (6 = TCP, 17 = UDP) |
 | 10 | `src_ip` | Source IP address |
 | 11 | `dst_ip` | Destination IP address |
-| 12 | `src_port` | Source Port |
-| 13 | `dst_port` | Destination Port |
-| 14 | `tcp_flags` | TCP Flags string (e.g. "PA", "S", "F") |
-| 15 | `direction` | `0` = Uplink, `1` = Downlink |
-| 16 | `iat` | Inter-arrival time (seconds since prev packet) |
+| 12 | `src_port` | Source port |
+| 13 | `dst_port` | Destination port |
+| 14 | `tcp_flags` | TCP flags string (e.g. `PA`, `S`, `F`) |
+| 15 | `direction` | `0` = Uplink (UE → server), `1` = Downlink (server → UE) |
+| 16 | `iat` | Inter-arrival time (seconds since previous packet) |
 
 ---
 
@@ -88,18 +108,18 @@ Both datasets' raw action labels are mapped to **14 unified actions** via `ACTIO
 
 ### 3.1 MIRAGE (from `BF_activity` field)
 
-Compound labels use the **primary-first rule**: in `X-Y`, X = primary activity.
+Compound labels (e.g. `videocall-audiocall`) use the **primary-first rule**: the first activity determines classification.
 
 | Unified Action | Raw Labels | Justification |
 | :--- | :--- | :--- |
-| `videocall` | `videocall`, `chat-videocall`, `videocall-chat`, `videocall-audiocall` | Large-packet ratio 11–17% (video frames >1KB) |
-| `audiocall` | `audiocall`, `chat-audiocall`, `audiocall-chat`, `audiocall-videocall` | Large-packet ratio 7–10% (voice codecs <500B) |
-| `video-streaming` | `video-streaming`, `video on-demand` | UL Byte% ~30%, high large-pkt ratio, IAT <20ms |
-| `chat` | `chat` | Bidirectional small packets, high IAT (~0.46s) |
-| `gaming-online` | `gaming-online` | UL Byte% ~22%, very large packets |
+| `videocall` | `videocall`, `chat-videocall`, `videocall-chat`, `videocall-audiocall` | Large-packet ratio 11–17% (video frames >1 KB) |
+| `audiocall` | `audiocall`, `chat-audiocall`, `audiocall-chat`, `audiocall-videocall` | Large-packet ratio 7–10% (voice codecs <500 B) |
+| `video-streaming` | `video-streaming`, `video on-demand` | UL byte% ~30%, high large-pkt ratio, IAT <20 ms |
+| `chat` | `chat` | Bidirectional small packets, high IAT (~0.46 s) |
+| `gaming-online` | `gaming-online` | UL byte% ~22%, very large packets |
 | `background` | `None`, `Unknown` | No labeled activity |
 
-> **Key distinction**: `videocall-audiocall` → `videocall` (large-pkt rate 11.5% > pure audiocall 10.3%), while `audiocall-videocall` → `audiocall` (large-pkt rate 10.3% = pure audiocall). Similarity scores: 88.8%–97.4%.
+> **Key distinction**: `videocall-audiocall` → `videocall` (large-pkt rate 11.5% > pure audiocall 10.3%), while `audiocall-videocall` → `audiocall` (large-pkt rate 10.3% ≈ pure audiocall). Similarity scores: 88.8%–97.4%.
 
 ### 3.2 UTMobileNet (from filename parsing)
 
@@ -119,26 +139,37 @@ Compound labels use the **primary-first rule**: in `X-Y`, X = primary activity.
 ### 3.3 Cross-Dataset Validation
 
 Two unified actions contain data from **both** datasets, confirming classification consistency:
-- **`video-streaming/Video_Streaming`**: MIRAGE 10,466 + UTM 379 sessions
-- **`chat/VoIP`**: MIRAGE 6,607 + UTM 251 sessions
+
+- **`video-streaming/Video_Streaming`**: MIRAGE 10,466 + UTMobileNet 379 sessions
+- **`chat/VoIP`**: MIRAGE 6,607 + UTMobileNet 251 sessions
 
 ---
 
 ## 4. Workflow
 
-### Step 1: Generate Unified Dataset
-Run this script to process raw MIRAGE JSONs and UTMobileNet CSVs into the `Combined_Dataset` folder.
+### Step 1 — Generate Unified Dataset
 
 ```bash
 python unify_datasets.py
 ```
-*Output: `Combined_Dataset/<action>/<genre>/` containing standardized CSVs.*
 
-### Step 2: Simulate Multi-UE Traffic
+Processes raw MIRAGE JSONs and UTMobileNet CSVs into the `Combined_Dataset/` folder with the standardized column format.
+
+### Step 2 — Simulate Multi-UE Traffic
+
 ```bash
 python simulate_ue.py scenario_config.json
 ```
-*Output: `simulated_traffic.csv` + `simulated_traffic.meta.json`*
+
+Composes realistic multi-UE traffic from real session data based on a scenario configuration. Outputs a merged CSV and a JSON metadata file.
+
+### Step 3 — Package as UPF-EES Notifications *(optional)*
+
+```bash
+python upf_ees_packager.py simulated_traffic.csv --interval 30 --base-time 2026-01-14T12:00:00Z
+```
+
+Aggregates the simulated traffic into 3GPP-compliant UPF-EES notification JSON files with per-UE volume and throughput measurements.
 
 ---
 
@@ -179,67 +210,133 @@ python simulate_ue.py scenario_config.json
                     "duration": 200.0
                 }
             ]
-        },
-        {
-            "UE_ID": "UE_003",
-            "IP_address": "10.10.0.3",
-            "flows": [
-                {
-                    "action": "chat",
-                    "genre": "VoIP",
-                    "start": 15.0,
-                    "duration": 50.0
-                }
-            ]
         }
     ]
 }
 ```
-**How it works:**
--   The Simulator randomly picks actual session files from `Combined_Dataset` matching the criteria.
--   It **stitches** them together if the requested `duration` is longer than a single session.
--   It **shifts** the timestamps to match the `start` time in your timeline.
--   The final output preserves microsecond precision and the unified column structure.
+
+### Configuration Fields
 
 | Field | Required | Description |
 | :--- | :---: | :--- |
 | `correlation_id` | No | Identifier for this simulation run |
 | `output_file` | No | Output CSV filename (default: `simulated_ue_traffic.csv`) |
 | `UEs[].UE_ID` | Yes | Unique identifier for the UE |
-| `UEs[].IP_address` | Yes | UE IPv4 address (replaces client-side IPs) |
-| `flows[].action` | Yes | Must match action folder in `Combined_Dataset/` |
-| `flows[].genre` | Yes | Must match genre folder in `Combined_Dataset/` |
-| `flows[].app` | No | Filter by specific app name in filename |
-| `flows[].start` | Yes | Flow start time (seconds) |
-| `flows[].duration` | Yes | Flow duration (seconds) |
+| `UEs[].IP_address` | Yes | UE IPv4 address (overwrites client-side IPs in packets) |
+| `flows[].action` | Yes | Must match an `<action>` folder in `Combined_Dataset/` |
+| `flows[].genre` | Yes | Must match a `<genre>` folder under the action |
+| `flows[].app` | No | Filter sessions by app name (case-insensitive substring match) |
+| `flows[].start` | Yes | Flow start time in seconds |
+| `flows[].duration` | Yes | Flow duration in seconds |
+| `flows[].file_path` | No | Pinned session files for deterministic replay (see below) |
 
-### How it works
-- Each flow runs for exactly `start + duration` seconds — there is no global time cap.
-- Session files are randomly selected from `Combined_Dataset/<action>/<genre>/`.
-- If a session is shorter than the requested duration, additional sessions are **stitched** end-to-end automatically.
-- The configured `IP_address` **replaces** the UE-side IP in every packet (uplink → `src_ip`, downlink → `dst_ip`).
-- All UEs' packets are **merged** into a single time-sorted CSV with `ue_id` and `ue_ip` columns prepended.
+### How It Works
+
+1. **Session Selection** — For each flow, session files are randomly selected from `Combined_Dataset/<action>/<genre>/`.
+2. **Automatic Stitching** — If a session is shorter than the requested duration, additional sessions are concatenated end-to-end until the duration is filled.
+3. **IP Replacement** — The configured `IP_address` replaces the UE-side IP in every packet:
+   - Uplink (`direction=0`): `src_ip` → UE's IP
+   - Downlink (`direction=1`): `dst_ip` → UE's IP
+4. **Timestamp Rebasing** — Each flow's packets are shifted to start at the configured `start` time.
+5. **Merging** — All UEs' packets are merged into a single time-sorted CSV.
 
 ### Output Files
 
-**CSV** (`simulated_traffic.csv`): Merged packet-level data.
-
-| Column | Description |
+| File | Description |
 | :--- | :--- |
-| `ue_id` | UE identifier from config |
-| `ue_ip` | UE IP address from config |
-| `flow_id` | e.g. `UE_001_flow_0` |
-| `adjusted_timestamp` | Absolute timestamp in simulation timeline |
-| *(columns 5–20)* | Same 16 unified columns as Combined_Dataset |
+| `simulated_traffic.csv` | Merged packet-level CSV with `ue_id`, `ue_ip`, `flow_id`, `adjusted_timestamp` columns prepended to the standard 16 columns |
+| `simulated_traffic.meta.json` | Session provenance — records which source files were used for each flow. **Can be used as input for deterministic replay** (see below) |
 
-**JSON** (`simulated_traffic.meta.json`): Session provenance — records which source files were used for each flow's `file_path` array.
+### Deterministic Replay
+
+The output `meta.json` has the same structure as the input config, with an additional `file_path` array in each flow recording exactly which session files were selected. Feeding the `meta.json` back as input produces **byte-identical** output:
+
+```bash
+# 1. Normal run (random session selection)
+python simulate_ue.py scenario_config.json
+# → simulated_traffic.csv + simulated_traffic.meta.json
+
+# 2. Replay (deterministic — uses the same sessions in the same order)
+python simulate_ue.py simulated_traffic.meta.json
+# → identical simulated_traffic.csv
+```
+
+When `file_path` is present, the simulator skips random selection and uses those exact files in order. Flows in replay mode are tagged with `[REPLAY]` in the console output.
 
 ---
 
-## 6. Known Limitations
+## 6. UPF-EES Notification Packager
+
+Converts simulated traffic into 3GPP UPF Event Exposure Service (EES) notification format.
+
+```bash
+python upf_ees_packager.py simulated_traffic.csv --interval 30 --base-time 2026-01-14T12:00:00Z
+```
+
+| Argument | Default | Description |
+| :--- | :--- | :--- |
+| `csv_file` | *(required)* | Path to `simulated_traffic.csv` |
+| `--interval` | `30` | Reporting period in seconds |
+| `--base-time` | current UTC | Simulation start time (ISO 8601) |
+| `--output-dir` | `upf_ees_output/` | Output directory for JSON files |
+
+### Output Format
+
+Each notification window produces a JSON file containing per-UE measurements:
+
+```json
+{
+  "notificationItems": [
+    {
+      "eventType": "USER_DATA_USAGE_MEASURES",
+      "timeStamp": "2026-01-14T12:00:30Z",
+      "ueIpv4Addr": "10.10.0.1",
+      "startTime": "2026-01-14T12:00:00Z",
+      "userDataUsageMeasurements": [
+        {
+          "volumeMeasurement": {
+            "totalVolume": 1572864,
+            "ulVolume": 524288,
+            "dlVolume": 1048576,
+            "totalNbOfPackets": 2000,
+            "ulNbOfPackets": 800,
+            "dlNbOfPackets": 1200
+          },
+          "throughputMeasurement": {
+            "ulThroughput": "139810 bps",
+            "dlThroughput": "279620 bps",
+            "ulPacketThroughput": "26.67 pps",
+            "dlPacketThroughput": "40.00 pps"
+          }
+        }
+      ]
+    }
+  ],
+  "correlationId": "sim_001"
+}
+```
+
+### Measurement Calculations
+
+| Metric | Formula |
+| :--- | :--- |
+| `ulVolume` / `dlVolume` | Sum of `pkt_len` for UL (`direction=0`) / DL (`direction=1`) packets in window |
+| `totalVolume` | `ulVolume + dlVolume` |
+| `ulThroughput` | `ulVolume × 8 ÷ interval` (bps) |
+| `ulPacketThroughput` | `ulNbOfPackets ÷ interval` (pps) |
+
+---
+
+## 7. Known Limitations
 
 ### UTMobileNet TCP Flags
+
 The raw UTMobileNet2021 dataset lacks a full hexadecimal TCP flags column and is missing several flag bits (SYN, ACK, PSH, RST).
--   **Current Behavior**: We reconstruct flags from the available `tcp.flags.fin` and `tcp.flags.ns` columns.
--   **Impact**: UTMobileNet packets will mostly have empty `tcp_flags`, except for those with **FIN (F)** or **NS (N)** set.
--   **MIRAGE Data**: Unaffected; contains full TCP flag information (e.g., "SPA", "A").
+
+- **Current Behavior**: Flags are reconstructed from the available `tcp.flags.fin` and `tcp.flags.ns` columns only.
+- **Impact**: UTMobileNet packets will mostly have empty `tcp_flags`, except for those with **FIN (F)** or **NS (N)** set.
+- **MIRAGE Data**: Unaffected — contains full TCP flag information (e.g. `SPA`, `A`, `FA`).
+
+### Session Density Variation
+
+Traffic density varies significantly across action types. For example, `videocall` sessions may contain thousands of packets per second, while `chat` sessions average ~1 packet every 3 seconds. This is a faithful reflection of real network behavior and should be considered when configuring flow durations.

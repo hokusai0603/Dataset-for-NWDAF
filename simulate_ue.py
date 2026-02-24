@@ -131,13 +131,26 @@ def build_flow_packets(
     flow_duration = float(flow_cfg["duration"])
     flow_end = flow_start + flow_duration
 
-    session_files = find_session_files(action, genre, app)
-    if not session_files:
-        print(f"  [WARN] No sessions found for {action}/{genre}"
-              f"{f' / {app}' if app else ''}, skipping flow {flow_id}")
-        return None, [], []
-
-    random.shuffle(session_files)
+    # Replay mode: use exact file_path list from a previous meta.json
+    pinned_files = flow_cfg.get("file_path")
+    if pinned_files:
+        session_files = [DATASET_PATH / fp for fp in pinned_files]
+        missing = [str(fp) for fp in session_files if not fp.exists()]
+        if missing:
+            print(f"  [WARN] Replay files missing: {missing}")
+            session_files = [fp for fp in session_files if fp.exists()]
+        if not session_files:
+            print(f"  [WARN] No replay files found, skipping flow {flow_id}")
+            return None, [], []
+        replay_mode = True
+    else:
+        session_files = find_session_files(action, genre, app)
+        if not session_files:
+            print(f"  [WARN] No sessions found for {action}/{genre}"
+                  f"{f' / {app}' if app else ''}, skipping flow {flow_id}")
+            return None, [], []
+        random.shuffle(session_files)
+        replay_mode = False
 
     collected_packets = []
     used_files = []
@@ -250,9 +263,12 @@ def main():
             start = flow_cfg["start"]
             dur = flow_cfg["duration"]
 
+            has_pinned = "file_path" in flow_cfg
+            mode_tag = " [REPLAY]" if has_pinned else ""
+
             print(f"  [{flow_id}] {action}/{genre}"
                   f"{f' ({app})' if app and app != 'any' else ''}"
-                  f"  t={start}s → {start+dur}s")
+                  f"  t={start}s → {start+dur}s{mode_tag}")
 
             header, packets, used_files = build_flow_packets(
                 flow_cfg, flow_id, ue_id, ue_ip
@@ -260,7 +276,7 @@ def main():
             if header:
                 all_headers[flow_id] = header
             all_packets.extend(packets)
-            print(f"    → {len(packets)} packets, {len(used_files)} sessions used")
+            print(f"    → {len(packets)} packets, {len(used_files)} sessions")
 
             # Record metadata
             meta_flows.append({
