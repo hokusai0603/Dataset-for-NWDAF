@@ -373,11 +373,12 @@ def process_mirage():
             out_name = f"mirage_{app_label}_{file_epoch}_{safe_sid}.csv"
             out_file = out_dir / out_name
 
-            # Build header: only unified columns
+            # Build header with unified columns at the start
+            pkt_fields_no_ts = [f for f in MIRAGE_PACKET_FIELDS if f != "timestamp"]
             header = [
                 "source_dataset", "app_name", "category", "activity",
                 "session_id", "session_duration", "relative_time",
-            ] + UNIFIED_METRICS
+            ] + UNIFIED_METRICS + pkt_fields_no_ts
 
             first_ts = ts_list[0]
 
@@ -409,6 +410,10 @@ def process_mirage():
                         "MIRAGE", app_label, category, unified_action,
                         session_id, session_duration, rel_time,
                     ] + unified_row
+                    
+                    for field in pkt_fields_no_ts:
+                        arr = pkt.get(field, [])
+                        row.append(arr[i] if i < len(arr) else "")
                     writer.writerow(row)
 
             total_sessions += 1
@@ -507,7 +512,7 @@ def process_utmobile():
 
                 with open(out_file, "w", newline="", encoding="utf-8") as fout:
                     writer = csv.writer(fout)
-                    writer.writerow(meta_header)
+                    writer.writerow(meta_header + orig_header)
                     
                     prev_ts = first_ts
                     for idx, row in enumerate(rows):
@@ -550,7 +555,7 @@ def process_utmobile():
                             "UTMobileNet", app, category, unified_action,
                             session_id, session_duration, rel_time,
                         ] + unified_vals
-                        writer.writerow(meta_row)
+                        writer.writerow(meta_row + row)
 
                 total_sessions += 1
                 total_packets += len(rows)

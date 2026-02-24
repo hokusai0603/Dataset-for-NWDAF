@@ -132,107 +132,47 @@ Run this script to process raw MIRAGE JSONs and UTMobileNet CSVs into the `Combi
 ```bash
 python unify_datasets.py
 ```
-*Output: `Combined_Dataset/<action>/<genre>/` containing standardized CSVs.*
+*Output: `Combined_Dataset/<action>/<genre>/` folder containing standardized CSVs.*
 
-### Step 2: Simulate Multi-UE Traffic
+### Step 2: Simulate UE Traffic
+Use `simulate_ue.py` to mix and match sessions from the unified dataset into a single, continuous user traffic stream based on a scenario config.
+
 ```bash
 python simulate_ue.py scenario_config.json
 ```
-*Output: `simulated_traffic.csv` + `simulated_traffic.meta.json`*
+*Output: `simulated_ue_traffic.csv` (by default)*
 
 ---
 
 ## 5. Simulation Configuration (`scenario_config.json`)
 
+Define your traffic scenario in a JSON file:
+
 ```json
 {
-    "correlation_id": "sim_001",
-    "output_file": "simulated_traffic.csv",
-    "UEs": [
+    "total_time": 300,
+    "output_file": "my_simulation.csv",
+    "flows": [
         {
-            "UE_ID": "UE_001",
-            "IP_address": "10.10.0.1",
-            "flows": [
-                {
-                    "action": "videocall",
-                    "genre": "VoIP",
-                    "app": "Discord",
-                    "start": 0.0,
-                    "duration": 60.0
-                },
-                {
-                    "action": "browsing",
-                    "genre": "Social_Media",
-                    "start": 30.0,
-                    "duration": 120.0
-                }
-            ]
+            "category": "VoIP",
+            "app": "Discord",
+            "start": 0.0,
+            "duration": 60.0
         },
         {
-            "UE_ID": "UE_002",
-            "IP_address": "10.10.0.2",
-            "flows": [
-                {
-                    "action": "video-streaming",
-                    "genre": "Video_Streaming",
-                    "start": 10.0,
-                    "duration": 200.0
-                }
-            ]
-        },
-        {
-            "UE_ID": "UE_003",
-            "IP_address": "10.10.0.3",
-            "flows": [
-                {
-                    "action": "chat",
-                    "genre": "VoIP",
-                    "start": 15.0,
-                    "duration": 50.0
-                }
-            ]
+            "category": "Video_Streaming",
+            "start": 10.5,
+            "duration": 120.0
         }
     ]
 }
 ```
+
 **How it works:**
 -   The Simulator randomly picks actual session files from `Combined_Dataset` matching the criteria.
 -   It **stitches** them together if the requested `duration` is longer than a single session.
 -   It **shifts** the timestamps to match the `start` time in your timeline.
 -   The final output preserves microsecond precision and the unified column structure.
-
-| Field | Required | Description |
-| :--- | :---: | :--- |
-| `correlation_id` | No | Identifier for this simulation run |
-| `output_file` | No | Output CSV filename (default: `simulated_ue_traffic.csv`) |
-| `UEs[].UE_ID` | Yes | Unique identifier for the UE |
-| `UEs[].IP_address` | Yes | UE IPv4 address (replaces client-side IPs) |
-| `flows[].action` | Yes | Must match action folder in `Combined_Dataset/` |
-| `flows[].genre` | Yes | Must match genre folder in `Combined_Dataset/` |
-| `flows[].app` | No | Filter by specific app name in filename |
-| `flows[].start` | Yes | Flow start time (seconds) |
-| `flows[].duration` | Yes | Flow duration (seconds) |
-
-### How it works
-- Each flow runs for exactly `start + duration` seconds — there is no global time cap.
-- Session files are randomly selected from `Combined_Dataset/<action>/<genre>/`.
-- If a session is shorter than the requested duration, additional sessions are **stitched** end-to-end automatically.
-- The configured `IP_address` **replaces** the UE-side IP in every packet (uplink → `src_ip`, downlink → `dst_ip`).
-- All UEs' packets are **merged** into a single time-sorted CSV with `ue_id` and `ue_ip` columns prepended.
-
-### Output Files
-
-**CSV** (`simulated_traffic.csv`): Merged packet-level data.
-
-| Column | Description |
-| :--- | :--- |
-| `ue_id` | UE identifier from config |
-| `ue_ip` | UE IP address from config |
-| `flow_id` | e.g. `UE_001_flow_0` |
-| `adjusted_timestamp` | Absolute timestamp in simulation timeline |
-| *(columns 5–20)* | Same 16 unified columns as Combined_Dataset |
-
-**JSON** (`simulated_traffic.meta.json`): Session provenance — records which source files were used for each flow's `file_path` array.
 
 ---
 
