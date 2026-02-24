@@ -1,24 +1,49 @@
 {
-  "total_time": 289.964512,
-  "output_file": "simulated_ue_traffic.csv",
-  "flows": [
+  "correlation_id": "test_001",
+  "output_file": "simulated_traffic.csv",
+  "UEs": [
     {
-      "category": "VoIP",
-      "app": null,
-      "start": 0.123456,
-      "duration": 120
+      "UE_ID": "UE_001",
+      "IP_address": "10.10.0.1",
+      "flows": [
+        {
+          "action": "videocall",
+          "genre": "VoIP",
+          "app": "Discord",
+          "start": 0.0,
+          "duration": 15.025
+        },
+        {
+          "action": "browsing",
+          "genre": "Social_Media",
+          "start": 5.252,
+          "duration": 20.0
+        }
+      ]
     },
     {
-      "category": "Video_Streaming",
-      "app": null,
-      "start": 28.5614,
-      "duration": 180.231
+      "UE_ID": "UE_002",
+      "IP_address": "10.10.0.2",
+      "flows": [
+        {
+          "action": "video-streaming",
+          "genre": "Video_Streaming",
+          "start": 10.0,
+          "duration": 30.0
+        }
+      ]
     },
     {
-      "category": "File_Transfer",
-      "app": "dropbox",
-      "start": 60.256,
-      "duration": 45.5684
+      "UE_ID": "UE_003",
+      "IP_address": "10.10.0.3",
+      "flows": [
+        {
+          "action": "chat",
+          "genre": "VoIP",
+          "start": 15.0,
+          "duration": 50.0
+        }
+      ]
     }
   ]
 }
