@@ -1,0 +1,77 @@
+{
+  "notificationItems": [
+    {
+      "eventType": "USER_DATA_USAGE_MEASURES",
+      "timeStamp": "2026-01-14T12:00:20Z",
+      "ueIpv4Addr": "10.10.0.1",
+      "startTime": "2026-01-14T12:00:10Z",
+      "userDataUsageMeasurements": [
+        {
+          "volumeMeasurement": {
+            "totalVolume": 33655582,
+            "ulVolume": 33369617,
+            "dlVolume": 285965,
+            "totalNbOfPackets": 4630,
+            "ulNbOfPackets": 4137,
+            "dlNbOfPackets": 493
+          },
+          "throughputMeasurement": {
+            "ulThroughput": "26695694 bps",
+            "dlThroughput": "228772 bps",
+            "ulPacketThroughput": "413.70 pps",
+            "dlPacketThroughput": "49.30 pps"
+          }
+        }
+      ]
+    },
+    {
+      "eventType": "USER_DATA_USAGE_MEASURES",
+      "timeStamp": "2026-01-14T12:00:20Z",
+      "ueIpv4Addr": "10.10.0.2",
+      "startTime": "2026-01-14T12:00:10Z",
+      "userDataUsageMeasurements": [
+        {
+          "volumeMeasurement": {
+            "totalVolume": 24365416,
+            "ulVolume": 211194,
+            "dlVolume": 24154222,
+            "totalNbOfPackets": 20566,
+            "ulNbOfPackets": 1776,
+            "dlNbOfPackets": 18790
+          },
+          "throughputMeasurement": {
+            "ulThroughput": "168955 bps",
+            "dlThroughput": "19323378 bps",
+            "ulPacketThroughput": "177.60 pps",
+            "dlPacketThroughput": "1879.00 pps"
+          }
+        }
+      ]
+    },
+    {
+      "eventType": "USER_DATA_USAGE_MEASURES",
+      "timeStamp": "2026-01-14T12:00:20Z",
+      "ueIpv4Addr": "10.10.0.3",
+      "startTime": "2026-01-14T12:00:10Z",
+      "userDataUsageMeasurements": [
+        {
+          "volumeMeasurement": {
+            "totalVolume": 11005,
+            "ulVolume": 1859,
+            "dlVolume": 9146,
+            "totalNbOfPackets": 33,
+            "ulNbOfPackets": 15,
+            "dlNbOfPackets": 18
+          },
+          "throughputMeasurement": {
+            "ulThroughput": "1487 bps",
+            "dlThroughput": "7317 bps",
+            "ulPacketThroughput": "1.50 pps",
+            "dlPacketThroughput": "1.80 pps"
+          }
+        }
+      ]
+    }
+  ],
+  "correlationId": "test_001"
+}

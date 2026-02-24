@@ -1,0 +1,68 @@
+{
+  "correlation_id": "test_001",
+  "output_file": "simulated_traffic.csv",
+  "UEs": [
+    {
+      "UE_ID": "UE_001",
+      "IP_address": "10.10.0.1",
+      "flows": [
+        {
+          "action": "videocall",
+          "genre": "VoIP",
+          "app": "Discord",
+          "start": 0.0,
+          "duration": 15.025,
+          "file_path": [
+            "videocall\\VoIP\\mirage_Discord_1636715645_192.168.20.104,46906,162.159.129.235,443,6.csv",
+            "videocall\\VoIP\\mirage_Discord_1671529648_192.168.20.101,58649,162.159.129.235,443,6.csv"
+          ]
+        },
+        {
+          "action": "browsing",
+          "genre": "Social_Media",
+          "app": null,
+          "start": 5.252,
+          "duration": 20.0,
+          "file_path": [
+            "browsing\\Social_Media\\utmobile_reddit_browse_2019-03-17_11-59-05_4fd1c357.csv",
+            "browsing\\Social_Media\\utmobile_twitter_scroll-feed_2019-03-21_01-45-51_5bd0c615.csv"
+          ]
+        }
+      ]
+    },
+    {
+      "UE_ID": "UE_002",
+      "IP_address": "10.10.0.2",
+      "flows": [
+        {
+          "action": "video-streaming",
+          "genre": "Video_Streaming",
+          "app": null,
+          "start": 10.0,
+          "duration": 30.0,
+          "file_path": [
+            "video-streaming\\Video_Streaming\\utmobile_netflix_watch-video_2019-03-17_04-51-13_5bd0c615.csv",
+            "video-streaming\\Video_Streaming\\mirage_Crunchyroll_1674036981_192.168.20.100,49976,162.247.241.4,443,6.csv"
+          ]
+        }
+      ]
+    },
+    {
+      "UE_ID": "UE_003",
+      "IP_address": "10.10.0.3",
+      "flows": [
+        {
+          "action": "chat",
+          "genre": "VoIP",
+          "app": null,
+          "start": 15.0,
+          "duration": 50.0,
+          "file_path": [
+            "chat\\VoIP\\mirage_Teams_1634307618_192.168.20.104,56258,52.112.231.0,443,6.csv",
+            "chat\\VoIP\\mirage_Skype_1637927678_192.168.20.103,52565,68.232.34.200,443,6.csv"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "notificationItems": [
+    {
+      "eventType": "USER_DATA_USAGE_MEASURES",
+      "timeStamp": "2026-01-14T12:00:10Z",
+      "ueIpv4Addr": "10.10.0.1",
+      "startTime": "2026-01-14T12:00:00Z",
+      "userDataUsageMeasurements": [
+        {
+          "volumeMeasurement": {
+            "totalVolume": 472495,
+            "ulVolume": 3183,
+            "dlVolume": 469312,
+            "totalNbOfPackets": 849,
+            "ulNbOfPackets": 22,
+            "dlNbOfPackets": 827
+          },
+          "throughputMeasurement": {
+            "ulThroughput": "2546 bps",
+            "dlThroughput": "375450 bps",
+            "ulPacketThroughput": "2.20 pps",
+            "dlPacketThroughput": "82.70 pps"
+          }
+        }
+      ]
+    }
+  ],
+  "correlationId": "test_001"
+}
