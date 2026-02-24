@@ -3,8 +3,6 @@
 A unified, packet-level network traffic dataset and simulation toolkit for NWDAF (Network Data Analytics Function) research.
 We harmonize **MIRAGE-AppAct2024** and **UTMobileNet2021** into a single schema, then provide tools to simulate multi-UE traffic scenarios and package them as UPF-EES notifications.
 
-> **Dataset Download**: [Google Drive](https://drive.google.com/file/d/1M5lToHDKnkRKKvDORA8NZUX1IziELbIP/view?usp=sharing)
-
 ---
 
 ## Table of Contents
