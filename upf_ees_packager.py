@@ -39,14 +39,13 @@ def parse_args():
     return p.parse_args()
 
 
-def load_correlation_id(csv_path: Path) -> str:
-    """Try to load correlation_id from the companion .meta.json file."""
+def load_meta(csv_path: Path) -> dict:
+    """Try to load metadata from the companion .meta.json file."""
     meta_path = csv_path.with_suffix(".meta.json")
     if meta_path.exists():
         with open(meta_path, "r", encoding="utf-8") as f:
-            meta = json.load(f)
-        return meta.get("correlation_id", "")
-    return ""
+            return json.load(f)
+    return {}
 
 
 def iso_format(dt: datetime) -> str:
@@ -73,14 +72,17 @@ def main():
     out_dir = Path(args.output_dir) if args.output_dir else csv_path.parent / "upf_ees_output"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # Load correlation ID
-    correlation_id = load_correlation_id(csv_path)
+    # Load metadata
+    meta = load_meta(csv_path)
+    correlation_id = meta.get("correlation_id", "")
 
     # ── Read CSV and bucket packets ───────────────────────────────────
     # bucket_key = (window_index, ue_ip)
     # bucket_val = {ul_vol, dl_vol, ul_pkts, dl_pkts}
     buckets = {}
     ue_ips = {}  # ue_id → ue_ip
+    for ue in meta.get("UEs", []):
+        ue_ips[ue.get("UE_ID")] = ue.get("IP_address")
 
     print("=" * 60)
     print("UPF-EES Notification Packager")
@@ -123,10 +125,18 @@ def main():
         print("[ERR] No packets found in CSV.")
         sys.exit(1)
 
-    # ── Group by window index ────────────────────────────────────────
+    # ── Group by window index (Include zero-traffic UEs) ─────────────
+    max_win_idx = max(k[0] for k in buckets.keys())
     windows = {}
-    for (win_idx, ue_ip), b in buckets.items():
-        windows.setdefault(win_idx, []).append((ue_ip, b))
+    for win_idx in range(max_win_idx + 1):
+        windows[win_idx] = []
+        for ue_id, ue_ip in ue_ips.items():
+            b = buckets.get((win_idx, ue_ip), {
+                "ue_id": ue_id,
+                "ul_vol": 0, "dl_vol": 0,
+                "ul_pkts": 0, "dl_pkts": 0,
+            })
+            windows[win_idx].append((ue_ip, b))
 
     # ── Generate JSON files ──────────────────────────────────────────
     total_notifications = 0

@@ -1,0 +1,77 @@
+{
+  "notificationItems": [
+    {
+      "eventType": "USER_DATA_USAGE_MEASURES",
+      "timeStamp": "2026-02-26T07:43:37Z",
+      "ueIpv4Addr": "10.10.0.1",
+      "startTime": "2026-02-26T07:43:32Z",
+      "userDataUsageMeasurements": [
+        {
+          "volumeMeasurement": {
+            "totalVolume": 0,
+            "ulVolume": 0,
+            "dlVolume": 0,
+            "totalNbOfPackets": 0,
+            "ulNbOfPackets": 0,
+            "dlNbOfPackets": 0
+          },
+          "throughputMeasurement": {
+            "ulThroughput": "0 bps",
+            "dlThroughput": "0 bps",
+            "ulPacketThroughput": "0.00 pps",
+            "dlPacketThroughput": "0.00 pps"
+          }
+        }
+      ]
+    },
+    {
+      "eventType": "USER_DATA_USAGE_MEASURES",
+      "timeStamp": "2026-02-26T07:43:37Z",
+      "ueIpv4Addr": "10.10.0.2",
+      "startTime": "2026-02-26T07:43:32Z",
+      "userDataUsageMeasurements": [
+        {
+          "volumeMeasurement": {
+            "totalVolume": 104,
+            "ulVolume": 52,
+            "dlVolume": 52,
+            "totalNbOfPackets": 2,
+            "ulNbOfPackets": 1,
+            "dlNbOfPackets": 1
+          },
+          "throughputMeasurement": {
+            "ulThroughput": "83 bps",
+            "dlThroughput": "83 bps",
+            "ulPacketThroughput": "0.20 pps",
+            "dlPacketThroughput": "0.20 pps"
+          }
+        }
+      ]
+    },
+    {
+      "eventType": "USER_DATA_USAGE_MEASURES",
+      "timeStamp": "2026-02-26T07:43:37Z",
+      "ueIpv4Addr": "10.10.0.3",
+      "startTime": "2026-02-26T07:43:32Z",
+      "userDataUsageMeasurements": [
+        {
+          "volumeMeasurement": {
+            "totalVolume": 780884,
+            "ulVolume": 14035,
+            "dlVolume": 766849,
+            "totalNbOfPackets": 773,
+            "ulNbOfPackets": 254,
+            "dlNbOfPackets": 519
+          },
+          "throughputMeasurement": {
+            "ulThroughput": "22456 bps",
+            "dlThroughput": "1226958 bps",
+            "ulPacketThroughput": "50.80 pps",
+            "dlPacketThroughput": "103.80 pps"
+          }
+        }
+      ]
+    }
+  ],
+  "correlationId": "test_001"
+}

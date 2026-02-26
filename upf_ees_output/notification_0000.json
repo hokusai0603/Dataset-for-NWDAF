@@ -2,24 +2,72 @@
   "notificationItems": [
     {
       "eventType": "USER_DATA_USAGE_MEASURES",
-      "timeStamp": "2026-01-14T12:00:10Z",
+      "timeStamp": "2026-02-26T07:43:12Z",
       "ueIpv4Addr": "10.10.0.1",
-      "startTime": "2026-01-14T12:00:00Z",
+      "startTime": "2026-02-26T07:43:07Z",
       "userDataUsageMeasurements": [
         {
           "volumeMeasurement": {
-            "totalVolume": 472495,
-            "ulVolume": 3183,
-            "dlVolume": 469312,
-            "totalNbOfPackets": 849,
-            "ulNbOfPackets": 22,
-            "dlNbOfPackets": 827
+            "totalVolume": 595,
+            "ulVolume": 279,
+            "dlVolume": 316,
+            "totalNbOfPackets": 11,
+            "ulNbOfPackets": 5,
+            "dlNbOfPackets": 6
           },
           "throughputMeasurement": {
-            "ulThroughput": "2546 bps",
-            "dlThroughput": "375450 bps",
-            "ulPacketThroughput": "2.20 pps",
-            "dlPacketThroughput": "82.70 pps"
+            "ulThroughput": "446 bps",
+            "dlThroughput": "506 bps",
+            "ulPacketThroughput": "1.00 pps",
+            "dlPacketThroughput": "1.20 pps"
+          }
+        }
+      ]
+    },
+    {
+      "eventType": "USER_DATA_USAGE_MEASURES",
+      "timeStamp": "2026-02-26T07:43:12Z",
+      "ueIpv4Addr": "10.10.0.2",
+      "startTime": "2026-02-26T07:43:07Z",
+      "userDataUsageMeasurements": [
+        {
+          "volumeMeasurement": {
+            "totalVolume": 0,
+            "ulVolume": 0,
+            "dlVolume": 0,
+            "totalNbOfPackets": 0,
+            "ulNbOfPackets": 0,
+            "dlNbOfPackets": 0
+          },
+          "throughputMeasurement": {
+            "ulThroughput": "0 bps",
+            "dlThroughput": "0 bps",
+            "ulPacketThroughput": "0.00 pps",
+            "dlPacketThroughput": "0.00 pps"
+          }
+        }
+      ]
+    },
+    {
+      "eventType": "USER_DATA_USAGE_MEASURES",
+      "timeStamp": "2026-02-26T07:43:12Z",
+      "ueIpv4Addr": "10.10.0.3",
+      "startTime": "2026-02-26T07:43:07Z",
+      "userDataUsageMeasurements": [
+        {
+          "volumeMeasurement": {
+            "totalVolume": 0,
+            "ulVolume": 0,
+            "dlVolume": 0,
+            "totalNbOfPackets": 0,
+            "ulNbOfPackets": 0,
+            "dlNbOfPackets": 0
+          },
+          "throughputMeasurement": {
+            "ulThroughput": "0 bps",
+            "dlThroughput": "0 bps",
+            "ulPacketThroughput": "0.00 pps",
+            "dlPacketThroughput": "0.00 pps"
           }
         }
       ]
