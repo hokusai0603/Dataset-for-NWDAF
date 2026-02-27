@@ -2,14 +2,14 @@
 """
 upf_ees_packager.py
 ===================
-Converts simulated UE traffic CSV into UPF-EES notification JSON.
+Converts simulated UE traffic Parquet into UPF-EES notification JSON.
 
 Aggregates packets per UE per time window and outputs USER_DATA_USAGE_MEASURES
 notifications with volume and throughput measurements.
 
 Usage:
-    python upf_ees_packager.py simulated_traffic.csv --interval 30
-    python upf_ees_packager.py simulated_traffic.csv --interval 10 --base-time 2026-01-14T12:00:00Z
+    python upf_ees_packager.py simulated_traffic.parquet --interval 30
+    python upf_ees_packager.py simulated_traffic.parquet --interval 10 --base-time 2026-01-14T12:00:00Z
 """
 
 import argparse
@@ -19,11 +19,12 @@ import math
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+import pandas as pd
 
 
 def parse_args():
     p = argparse.ArgumentParser(description="UPF-EES Notification Packager")
-    p.add_argument("csv_file", help="Path to simulated_traffic.csv")
+    p.add_argument("parquet_file", help="Path to simulated_traffic.parquet")
     p.add_argument(
         "--interval", type=float, default=30.0,
         help="Reporting interval in seconds (default: 30)"
@@ -39,9 +40,9 @@ def parse_args():
     return p.parse_args()
 
 
-def load_meta(csv_path: Path) -> dict:
+def load_meta(parquet_path: Path) -> dict:
     """Try to load metadata from the companion .meta.json file."""
-    meta_path = csv_path.with_suffix(".meta.json")
+    meta_path = parquet_path.with_suffix(".meta.json")
     if meta_path.exists():
         with open(meta_path, "r", encoding="utf-8") as f:
             return json.load(f)
@@ -55,11 +56,11 @@ def iso_format(dt: datetime) -> str:
 
 def main():
     args = parse_args()
-    csv_path = Path(args.csv_file)
+    parquet_path = Path(args.parquet_file)
     interval = args.interval
 
-    if not csv_path.exists():
-        print(f"[ERR] File not found: {csv_path}")
+    if not parquet_path.exists():
+        print(f"[ERR] File not found: {parquet_path}")
         sys.exit(1)
 
     # Base time
@@ -69,14 +70,14 @@ def main():
         base_time = datetime.now(timezone.utc)
 
     # Output directory
-    out_dir = Path(args.output_dir) if args.output_dir else csv_path.parent / "upf_ees_output"
+    out_dir = Path(args.output_dir) if args.output_dir else parquet_path.parent / "upf_ees_output"
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # Load metadata
-    meta = load_meta(csv_path)
+    meta = load_meta(parquet_path)
     correlation_id = meta.get("correlation_id", "")
 
-    # ── Read CSV and bucket packets ───────────────────────────────────
+    # ── Read Parquet and bucket packets ───────────────────────────────
     # bucket_key = (window_index, ue_ip)
     # bucket_val = {ul_vol, dl_vol, ul_pkts, dl_pkts}
     buckets = {}
@@ -86,43 +87,43 @@ def main():
 
     print("=" * 60)
     print("UPF-EES Notification Packager")
-    print(f"  Input       : {csv_path}")
+    print(f"  Input       : {parquet_path}")
     print(f"  Interval    : {interval}s")
     print(f"  Base time   : {iso_format(base_time)}")
     print(f"  Correlation : {correlation_id}")
     print("=" * 60)
 
-    with open(csv_path, "r", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            ts = float(row["adjusted_timestamp"])
-            ue_id = row["ue_id"]
-            ue_ip = row["ue_ip"]
-            pkt_len = int(float(row["pkt_len"])) if row["pkt_len"] else 0
-            direction = row["direction"].strip()
+    df = pd.read_parquet(parquet_path)
+    
+    for _, row in df.iterrows():
+        ts = float(row["adjusted_timestamp"])
+        ue_id = str(row["ue_id"])
+        ue_ip = str(row["ue_ip"])
+        pkt_len = int(float(row["pkt_len"])) if pd.notna(row["pkt_len"]) and row["pkt_len"] != "" else 0
+        direction = str(row["direction"]).strip()
 
-            ue_ips[ue_id] = ue_ip
+        ue_ips[ue_id] = ue_ip
 
-            win_idx = int(ts // interval)
-            key = (win_idx, ue_ip)
+        win_idx = int(ts // interval)
+        key = (win_idx, ue_ip)
 
-            if key not in buckets:
-                buckets[key] = {
-                    "ue_id": ue_id,
-                    "ul_vol": 0, "dl_vol": 0,
-                    "ul_pkts": 0, "dl_pkts": 0,
-                }
+        if key not in buckets:
+            buckets[key] = {
+                "ue_id": ue_id,
+                "ul_vol": 0, "dl_vol": 0,
+                "ul_pkts": 0, "dl_pkts": 0,
+            }
 
-            b = buckets[key]
-            if direction == "0":  # Uplink
-                b["ul_vol"] += pkt_len
-                b["ul_pkts"] += 1
-            elif direction == "1":  # Downlink
-                b["dl_vol"] += pkt_len
-                b["dl_pkts"] += 1
+        b = buckets[key]
+        if direction == "0":  # Uplink
+            b["ul_vol"] += pkt_len
+            b["ul_pkts"] += 1
+        elif direction == "1":  # Downlink
+            b["dl_vol"] += pkt_len
+            b["dl_pkts"] += 1
 
     if not buckets:
-        print("[ERR] No packets found in CSV.")
+        print("[ERR] No packets found in Parquet.")
         sys.exit(1)
 
     # ── Group by window index (Include zero-traffic UEs) ─────────────

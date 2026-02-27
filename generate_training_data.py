@@ -3,7 +3,7 @@
 generate_training_data.py
 =========================
 End-to-end dataset generator producing strictly compliant EES JSON files
-alongside a separate labels CSV file for ML training.
+alongside a separate labels parquet file for ML training.
 
 Features:
 1. Excludes 'upload', 'download', 'background'.
@@ -287,7 +287,7 @@ def main():
                 })
                 windows[win_idx].append((ue["ip"], b))
 
-        # ── Output EES JSON & Labels CSV ──────────────────────────────────
+        # ── Output EES JSON & Labels Parquet ──────────────────────────────
         all_notifications = []
         labels_rows = [["window_index", "start_time", "end_time", "ue_ip", "ground_truth_labels"]]
 
@@ -352,11 +352,10 @@ def main():
         with open(combined_path, "w", encoding="utf-8") as fout:
             json.dump(all_notifications, fout, indent=2, ensure_ascii=False)
 
-        # Write Labels CSV for this run
-        labels_path = out_dir / f"training_labels_run{run_id:03d}.csv"
-        with open(labels_path, "w", newline="", encoding="utf-8") as fout:
-            writer = csv.writer(fout)
-            writer.writerows(labels_rows)
+        # Write Labels Parquet for this run
+        labels_path = out_dir / f"training_labels_run{run_id:03d}.parquet"
+        df_labels = pd.DataFrame(labels_rows[1:], columns=labels_rows[0])
+        df_labels.to_parquet(labels_path, index=False, compression="snappy")
 
     print(f"\nSaved {args.runs} separate runs to: {out_dir}")
     print("=" * 60)

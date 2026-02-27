@@ -8,7 +8,7 @@ Usage:
     python simulate_ue.py scenario_config.json
 
 Input:  JSON config specifying UEs, each with flows (action, genre, start, duration).
-Output: 1) Single CSV with all UE packets merged and sorted by timestamp.
+Output: 1) Single Parquet with all UE packets merged and sorted by timestamp.
         2) JSON metadata file recording which session files were used.
 
 If a session is shorter than the requested duration, additional sessions
@@ -49,7 +49,7 @@ def load_config(config_path: str) -> dict:
             assert "duration" in flow, f"UE {u_idx} flow {f_idx} must have 'duration'"
             flow.setdefault("app", None)
 
-    cfg.setdefault("output_file", "simulated_ue_traffic.csv")
+    cfg.setdefault("output_file", "simulated_ue_traffic.parquet")
     cfg.setdefault("correlation_id", "")
     return cfg
 
@@ -115,7 +115,7 @@ def build_flow_packets(
     Build the packet list for one flow definition.
 
     Returns (unified_header, packet_rows, used_files) where:
-      - unified_header: the CSV header from the source sessions
+      - unified_header: the header from the source sessions
       - packet_rows: list of (adj_ts, ue_id, ue_ip, flow_id, header, row)
       - used_files: list of session file paths used
 
@@ -318,17 +318,17 @@ def main():
 
     out_path = SCRIPT_DIR / output_file
 
-    with open(out_path, "w", newline="", encoding="utf-8") as fout:
-        writer = csv.writer(fout)
-        writer.writerow(out_header)
+    out_rows = []
+    for adj_ts, ue_id, ue_ip, flow_id, header, row in all_packets:
+        col_map = {col: val for col, val in zip(header, row)}
 
-        for adj_ts, ue_id, ue_ip, flow_id, header, row in all_packets:
-            col_map = {col: val for col, val in zip(header, row)}
+        out_row = [ue_id, ue_ip, flow_id, f"{adj_ts:.9f}"]
+        for col in standard_cols:
+            out_row.append(col_map.get(col, ""))
+        out_rows.append(out_row)
 
-            out_row = [ue_id, ue_ip, flow_id, f"{adj_ts:.9f}"]
-            for col in standard_cols:
-                out_row.append(col_map.get(col, ""))
-            writer.writerow(out_row)
+    df = pd.DataFrame(out_rows, columns=out_header)
+    df.to_parquet(out_path, index=False, compression="snappy")
 
     # ── Write JSON metadata ───────────────────────────────────────────
     meta_path = out_path.with_suffix(".meta.json")
@@ -342,7 +342,7 @@ def main():
 
     # ── Summary ───────────────────────────────────────────────────────
     print(f"\n{'=' * 60}")
-    print(f"Output CSV  : {out_path}")
+    print(f"Output Parquet: {out_path}")
     print(f"Output Meta : {meta_path}")
     print(f"Total packets: {len(all_packets)}")
 
