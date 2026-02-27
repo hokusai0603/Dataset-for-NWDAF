@@ -3,7 +3,7 @@
 unify_datasets.py
 =================
 Consolidates MIRAGE-AppAct2024 (.json) and UTMobileNet2021 (.csv) into
-    Combined_Dataset/<action>/<genre>/<session_file>.csv
+    Combined_Dataset/<action>/<genre>/<session_file>.parquet
 
 - No aggregation: every raw packet row is preserved.
 - Sessions are identified per-flow (MIRAGE) or per-file (UTMobileNet).
@@ -18,6 +18,7 @@ import re
 import sys
 from pathlib import Path
 from datetime import datetime
+import pandas as pd
 
 # ── paths ──────────────────────────────────────────────────────────────
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -370,7 +371,7 @@ def process_mirage():
             # Build output filename
             safe_sid = sanitize_filename(flow_key)
             file_epoch = jf.name.split("_")[0] if "_" in jf.name else "0"
-            out_name = f"mirage_{app_label}_{file_epoch}_{safe_sid}.csv"
+            out_name = f"mirage_{app_label}_{file_epoch}_{safe_sid}.parquet"
             out_file = out_dir / out_name
 
             # Build header: only unified columns
@@ -381,35 +382,51 @@ def process_mirage():
 
             first_ts = ts_list[0]
 
-            with open(out_file, "w", newline="", encoding="utf-8") as cf:
-                writer = csv.writer(cf)
-                writer.writerow(header)
-                for i in range(n_pkts):
-                    rel_time = ts_list[i] - first_ts
-                    
-                    # Unified Metrics Mapping
-                    # Protocol detection: if TCP_flags is non-empty, it's TCP(6), else UDP(17)
-                    tcp_f = pkt.get("TCP_flags", [])
-                    curr_flags = tcp_f[i] if i < len(tcp_f) else ""
-                    proto = 6 if curr_flags else 17
-                    
-                    unified_row = [
-                        pkt.get("IP_packet_bytes", [0])[i], # pkt_len
-                        proto,                             # l4_proto
-                        flow_src_ip,                       # src_ip
-                        flow_dst_ip,                       # dst_ip
-                        pkt.get("src_port", [0])[i],       # src_port
-                        pkt.get("dst_port", [0])[i],       # dst_port
-                        curr_flags,                        # tcp_flags
-                        pkt.get("packet_dir", [0])[i],     # direction
-                        pkt.get("iat", [0])[i],            # iat
-                    ]
+            out_rows = []
+            for i in range(n_pkts):
+                rel_time = ts_list[i] - first_ts
+                
+                # Unified Metrics Mapping
+                # Protocol detection: if TCP_flags is non-empty, it's TCP(6), else UDP(17)
+                tcp_f = pkt.get("TCP_flags", [])
+                curr_flags = tcp_f[i] if i < len(tcp_f) else ""
+                proto = 6 if curr_flags else 17
+                
+                unified_row = [
+                    pkt.get("IP_packet_bytes", [0])[i], # pkt_len
+                    proto,                             # l4_proto
+                    flow_src_ip,                       # src_ip
+                    flow_dst_ip,                       # dst_ip
+                    pkt.get("src_port", [0])[i],       # src_port
+                    pkt.get("dst_port", [0])[i],       # dst_port
+                    curr_flags,                        # tcp_flags
+                    pkt.get("packet_dir", [0])[i],     # direction
+                    pkt.get("iat", [0])[i],            # iat
+                ]
 
-                    row = [
-                        "MIRAGE", app_label, category, unified_action,
-                        session_id, session_duration, rel_time,
-                    ] + unified_row
-                    writer.writerow(row)
+                row = [
+                    "MIRAGE", app_label, category, unified_action,
+                    session_id, session_duration, rel_time,
+                ] + unified_row
+                out_rows.append(row)
+
+            df = pd.DataFrame(out_rows, columns=header)
+            # Ensure memory-efficient types
+            df["iat"] = pd.to_numeric(df["iat"], errors='coerce').astype('float32')
+            df["session_duration"] = pd.to_numeric(df["session_duration"], errors='coerce').astype('float32')
+            df["relative_time"] = pd.to_numeric(df["relative_time"], errors='coerce').astype('float32')
+            df["pkt_len"] = pd.to_numeric(df["pkt_len"], errors='coerce').astype('float32')
+            
+            df["l4_proto"] = pd.to_numeric(df["l4_proto"], errors='coerce').astype('Int8')
+            df["src_port"] = pd.to_numeric(df["src_port"], errors='coerce').astype('Int32')
+            df["dst_port"] = pd.to_numeric(df["dst_port"], errors='coerce').astype('Int32')
+            df["direction"] = pd.to_numeric(df["direction"], errors='coerce').astype('Int8')
+                
+            curr_string = ["source_dataset", "app_name", "category", "activity", "session_id", "src_ip", "dst_ip", "tcp_flags"]
+            for col in curr_string:
+                df[col] = df[col].astype(str)
+                
+            df.to_parquet(out_file, index=False, compression='snappy')
 
             total_sessions += 1
             total_packets += n_pkts
@@ -443,7 +460,7 @@ def process_utmobile():
         safe_mkdir(out_dir)
 
         session_id = cf_path.stem
-        out_file = out_dir / f"utmobile_{cf_path.name}"
+        out_file = out_dir / f"utmobile_{cf_path.stem}.parquet"
 
         try:
             with open(cf_path, "r", encoding="utf-8") as fin:
@@ -505,52 +522,67 @@ def process_utmobile():
 
                 local_ip = identify_local_ue_ip(rows, src_ip_idx, dst_ip_idx)
 
-                with open(out_file, "w", newline="", encoding="utf-8") as fout:
-                    writer = csv.writer(fout)
-                    writer.writerow(meta_header)
+                out_rows = []
+                prev_ts = first_ts
+                for idx, row in enumerate(rows):
+                    # Compute relative_time
+                    curr_ts = all_timestamps[idx] if all_timestamps else 0.0
+                    rel_time = curr_ts - first_ts
+                    iat = curr_ts - prev_ts
+                    prev_ts = curr_ts
+
+                    # Direction
+                    direction = 0 # Default UL
+                    if src_ip_idx is not None and row[src_ip_idx] != local_ip:
+                        direction = 1 # DL
                     
-                    prev_ts = first_ts
-                    for idx, row in enumerate(rows):
-                        # Compute relative_time
-                        curr_ts = all_timestamps[idx] if all_timestamps else 0.0
-                        rel_time = curr_ts - first_ts
-                        iat = curr_ts - prev_ts
-                        prev_ts = curr_ts
+                    # Ports
+                    s_port = row[tcp_src_idx] if tcp_src_idx is not None and row[tcp_src_idx] else (row[udp_src_idx] if udp_src_idx is not None else "")
+                    d_port = row[tcp_dst_idx] if tcp_dst_idx is not None and row[tcp_dst_idx] else (row[udp_dst_idx] if udp_dst_idx is not None else "")
+                    
+                    # TCP Flags mapping
+                    # Pass the pre-calculated dictionary of indices
+                    mapped_flags = map_utmobile_tcp_flags(row, flag_indices)
 
-                        # Direction
-                        direction = 0 # Default UL
-                        if src_ip_idx is not None and row[src_ip_idx] != local_ip:
-                            direction = 1 # DL
-                        
-                        # Ports
-                        s_port = row[tcp_src_idx] if tcp_src_idx is not None and row[tcp_src_idx] else (row[udp_src_idx] if udp_src_idx is not None else "")
-                        d_port = row[tcp_dst_idx] if tcp_dst_idx is not None and row[tcp_dst_idx] else (row[udp_dst_idx] if udp_dst_idx is not None else "")
-                        
-                        # TCP Flags mapping
-                        # Pass the pre-calculated dictionary of indices
-                        mapped_flags = map_utmobile_tcp_flags(row, flag_indices)
+                    # IPs
+                    src_ip_val = row[src_ip_idx] if src_ip_idx is not None and src_ip_idx < len(row) else ""
+                    dst_ip_val = row[dst_ip_idx] if dst_ip_idx is not None and dst_ip_idx < len(row) else ""
 
-                        # IPs
-                        src_ip_val = row[src_ip_idx] if src_ip_idx is not None and src_ip_idx < len(row) else ""
-                        dst_ip_val = row[dst_ip_idx] if dst_ip_idx is not None and dst_ip_idx < len(row) else ""
+                    unified_vals = [
+                        row[pkt_len_idx] if pkt_len_idx is not None else "", # pkt_len
+                        row[proto_idx] if proto_idx is not None else "",     # l4_proto
+                        src_ip_val,                                          # src_ip
+                        dst_ip_val,                                          # dst_ip
+                        s_port,                                              # src_port
+                        d_port,                                              # dst_port
+                        mapped_flags,                                        # tcp_flags
+                        direction,                                           # direction
+                        iat                                                  # iat
+                    ]
 
-                        unified_vals = [
-                            row[pkt_len_idx] if pkt_len_idx is not None else "", # pkt_len
-                            row[proto_idx] if proto_idx is not None else "",     # l4_proto
-                            src_ip_val,                                          # src_ip
-                            dst_ip_val,                                          # dst_ip
-                            s_port,                                              # src_port
-                            d_port,                                              # dst_port
-                            mapped_flags,                                        # tcp_flags
-                            direction,                                           # direction
-                            iat                                                  # iat
-                        ]
+                    meta_row = [
+                        "UTMobileNet", app, category, unified_action,
+                        session_id, session_duration, rel_time,
+                    ] + unified_vals
+                    out_rows.append(meta_row)
 
-                        meta_row = [
-                            "UTMobileNet", app, category, unified_action,
-                            session_id, session_duration, rel_time,
-                        ] + unified_vals
-                        writer.writerow(meta_row)
+                df = pd.DataFrame(out_rows, columns=meta_header)
+                # Ensure memory-efficient types
+                df["iat"] = pd.to_numeric(df["iat"], errors='coerce').astype('float32')
+                df["session_duration"] = pd.to_numeric(df["session_duration"], errors='coerce').astype('float32')
+                df["relative_time"] = pd.to_numeric(df["relative_time"], errors='coerce').astype('float32')
+                df["pkt_len"] = pd.to_numeric(df["pkt_len"], errors='coerce').astype('float32')
+                
+                df["l4_proto"] = pd.to_numeric(df["l4_proto"], errors='coerce').astype('Int8')
+                df["src_port"] = pd.to_numeric(df["src_port"], errors='coerce').astype('Int32')
+                df["dst_port"] = pd.to_numeric(df["dst_port"], errors='coerce').astype('Int32')
+                df["direction"] = pd.to_numeric(df["direction"], errors='coerce').astype('Int8')
+                    
+                curr_string = ["source_dataset", "app_name", "category", "activity", "session_id", "src_ip", "dst_ip", "tcp_flags"]
+                for col in curr_string:
+                    df[col] = df[col].astype(str)
+                    
+                df.to_parquet(out_file, index=False, compression='snappy')
 
                 total_sessions += 1
                 total_packets += len(rows)
@@ -586,12 +618,12 @@ def main():
         genres = sorted(g.name for g in action_dir.iterdir() if g.is_dir())
         action_total = 0
         for genre in genres:
-            n_files = len(list((action_dir / genre).glob("*.csv")))
+            n_files = len(list((action_dir / genre).glob("*.parquet")))
             action_total += n_files
         total_files += action_total
         print(f"  {action}/ ({action_total} files)")
         for genre in genres:
-            n_files = len(list((action_dir / genre).glob("*.csv")))
+            n_files = len(list((action_dir / genre).glob("*.parquet")))
             print(f"    └─ {genre}: {n_files}")
     print(f"Total files: {total_files}")
     print("=" * 60)

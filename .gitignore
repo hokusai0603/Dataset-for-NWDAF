@@ -21,7 +21,7 @@ Thumbs.db
 *.zip
 
 # Large Dataset (hosted on Google Drive)
-Combined_Dataset/
+# Combined_Dataset/ #free it
 
 # Generated Outputs
 simulated_ue_traffic.csv
@@ -37,3 +37,6 @@ stats_table.md
 *_check*.txt
 *_mapping*.txt
 
+#testing features
+convert_to_parquet.py
+patch_parquet_types.py

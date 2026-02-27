@@ -21,6 +21,7 @@ import os
 import random
 import sys
 from pathlib import Path
+import pandas as pd
 
 # ── paths ──────────────────────────────────────────────────────────────
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -55,7 +56,7 @@ def load_config(config_path: str) -> dict:
 
 def find_session_files(action: str, genre: str, app_filter: str = None) -> list:
     """
-    Return list of CSV paths in Combined_Dataset/<action>/<genre>/.
+    Return list of Parquet paths in Combined_Dataset/<action>/<genre>/.
     Optionally filter by app_name in the filename.
     """
     target_dir = DATASET_PATH / action / genre
@@ -63,7 +64,7 @@ def find_session_files(action: str, genre: str, app_filter: str = None) -> list:
         print(f"  [WARN] Dir not found: {target_dir}")
         return []
 
-    files = list(target_dir.glob("*.csv"))
+    files = list(target_dir.glob("*.parquet"))
 
     if app_filter:
         app_lower = app_filter.lower()
@@ -72,16 +73,18 @@ def find_session_files(action: str, genre: str, app_filter: str = None) -> list:
     return files
 
 
-def read_session_packets(csv_path: Path) -> tuple:
+def read_session_packets(file_path: Path) -> tuple:
     """
-    Read a session CSV and return (header, rows).
+    Read a session Parquet and return (header, rows).
     The header is a list of column names.
-    Each row is a list of string values.
+    Each row is a list of string values to match old behavior.
     """
-    with open(csv_path, "r", encoding="utf-8") as f:
-        reader = csv.reader(f)
-        header = next(reader)
-        rows = list(reader)
+    df = pd.read_parquet(file_path)
+    header = df.columns.tolist()
+    # Fill NA and convert to string array
+    # Replace nan with empty string before converting to avoid "nan" string
+    df = df.fillna("")
+    rows = df.astype(str).values.tolist()
     return header, rows
 
 

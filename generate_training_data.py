@@ -22,6 +22,7 @@ import random
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+import pandas as pd
 
 # ── Paths ─────────────────────────────────────────────────────────────
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -51,22 +52,24 @@ def iso_format(dt: datetime) -> str:
 
 # ── From simulate_ue.py ───────────────────────────────────────────────
 def find_session_files(action: str) -> list:
-    """Find all CSVs under Combined_Dataset/<action>/*"""
+    """Find all Parquet files under Combined_Dataset/<action>/*"""
     files = []
     target_dir = DATASET_PATH / action
     if target_dir.exists():
         # Match any genre under this action
         for genre_dir in target_dir.iterdir():
             if genre_dir.is_dir():
-                files.extend(list(genre_dir.glob("*.csv")))
+                files.extend(list(genre_dir.glob("*.parquet")))
     return files
 
 
-def read_session_packets(csv_path: Path) -> tuple:
-    with open(csv_path, "r", encoding="utf-8") as f:
-        reader = csv.reader(f)
-        header = next(reader)
-        rows = list(reader)
+def read_session_packets(file_path: Path) -> tuple:
+    df = pd.read_parquet(file_path)
+    header = df.columns.tolist()
+    
+    # Fill NA with empty string, convert to str
+    df = df.fillna("")
+    rows = df.astype(str).values.tolist()
     return header, rows
 
 
