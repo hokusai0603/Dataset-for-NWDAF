@@ -75,6 +75,13 @@ def main():
             duration = 1.0
 
         total_bytes = group["pkt_len"].sum()
+        total_packets = len(group)
+        
+        # Avoid division by zero
+        if total_packets == 0:
+            avg_pkt_len = 1500
+        else:
+            avg_pkt_len = max(64, int(total_bytes / total_packets))
         
         # Bandwidth in bits per second: (Total Bytes * 8) / duration
         # Convert to Mbps for iperf3
@@ -100,6 +107,7 @@ def main():
             "start_time": start_time,
             "duration": duration,
             "bandwidth_mbps": bandwidth_mbps,
+            "avg_pkt_len": avg_pkt_len,
             "is_udp": is_udp
         })
     
@@ -122,7 +130,8 @@ def main():
                 f"-c {args.server}",
                 f"-B {flow['ue_ip']}",           # Bind to UE IP
                 f"-t {duration_int}",            # Duration in seconds
-                f"-b {flow['bandwidth_mbps']:.3f}M" # Target bandwidth
+                f"-b {flow['bandwidth_mbps']:.3f}M", # Target bandwidth
+                f"-l {flow['avg_pkt_len']}"      # Packet length payload => inherently fixes packet rate
             ]
             
             if flow["is_udp"]:
