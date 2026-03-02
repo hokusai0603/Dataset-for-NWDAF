@@ -61,6 +61,7 @@ def main():
     grouped = df.groupby(["flow_id", "direction"])
     
     flows_to_run = []
+    current_port = 5201
     
     for (flow_id, direction), group in grouped:
         # 0 = Uplink (Client generates traffic, Server receives) -> Standard iperf3
@@ -100,12 +101,9 @@ def main():
         # If dataset says 17, we use -u. Otherwise default to TCP.
         is_udp = str(first_row.get("l4_proto", "")).strip() == "17"
         
-        # Determine port from UE IP last octet (e.g. 10.10.0.1 -> 5201)
-        try:
-            last_octet = int(ue_ip.split('.')[-1])
-            port = 5200 + last_octet
-        except:
-            port = 5201
+        # Every distinct test needs its own port since iperf3 server is single-threaded
+        port = current_port
+        current_port += 1
         
         flows_to_run.append({
             "flow_id": flow_id,
