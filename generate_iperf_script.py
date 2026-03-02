@@ -100,6 +100,13 @@ def main():
         # If dataset says 17, we use -u. Otherwise default to TCP.
         is_udp = str(first_row.get("l4_proto", "")).strip() == "17"
         
+        # Determine port from UE IP last octet (e.g. 10.10.0.1 -> 5201)
+        try:
+            last_octet = int(ue_ip.split('.')[-1])
+            port = 5200 + last_octet
+        except:
+            port = 5201
+        
         flows_to_run.append({
             "flow_id": flow_id,
             "direction": str(direction).strip(),
@@ -108,7 +115,8 @@ def main():
             "duration": duration,
             "bandwidth_mbps": bandwidth_mbps,
             "avg_pkt_len": avg_pkt_len,
-            "is_udp": is_udp
+            "is_udp": is_udp,
+            "port": port
         })
     
     # Sort commands by start_time so the script is easier to read
@@ -128,6 +136,7 @@ def main():
             cmd_parts = [
                 "iperf3",
                 f"-c {args.server}",
+                f"-p {flow['port']}",            # Target Port
                 f"-B {flow['ue_ip']}",           # Bind to UE IP
                 f"-t {duration_int}",            # Duration in seconds
                 f"-b {flow['bandwidth_mbps']:.3f}M", # Target bandwidth
