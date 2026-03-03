@@ -13,7 +13,6 @@ Usage:
 """
 
 import argparse
-import csv
 import json
 import math
 import sys

@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 """
-generate_training_data.py
+generate_cat1_cat2_training.py
 =========================
 End-to-end dataset generator producing strictly compliant EES JSON files
 alongside a separate labels parquet file for ML training.
 
 Features:
 1. Excludes 'upload', 'download', 'background'.
-2. Generates exactly 3 UEs engaging in Curriculum Learning per run.
+2. Generates exactly 3 UEs.
 3. Randomizes phase transitions and total duration per run for diversity.
-4. Outputs multiple files (runs) to provide varied datasets.
+4. Simulates Category 1 (Real-time & Streaming) and Category 2 (Bursty & Interactive) traffic, with transitions.
+5. Outputs multiple files (runs) to provide varied datasets (default: 15 runs).
 
 Usage:
-    python generate_training_data.py --runs 10 --min-duration 200 --max-duration 400
+    python generate_cat1_cat2_training.py --runs 15 --min-duration 200 --max-duration 400
 """
 
 import argparse
@@ -25,23 +26,23 @@ import pandas as pd
 
 # ── Paths ─────────────────────────────────────────────────────────────
 SCRIPT_DIR = Path(__file__).resolve().parent
-DATASET_PATH = SCRIPT_DIR / "Combined_Dataset"
+# Adjusted DATASET_PATH to point to the main folder from 'POC place'
+DATASET_PATH = (SCRIPT_DIR / ".." / "Combined_Dataset").resolve()
 
 # ── Config ────────────────────────────────────────────────────────────
-EXCLUDED_CATEGORIES = {"upload", "download", "background"}
-# We define "heavy" actions and "light" actions to mix
-HEAVY_ACTIONS = {"video-streaming", "gaming-online", "videocall", "audiocall"}
-LIGHT_ACTIONS = {"chat", "browsing", "search", "open-email", "social-post", "directions"}
+# We define "Cat1" actions and "Cat2" actions based on user requirements.
+CAT1_ACTIONS = {"video-streaming", "videocall", "gaming-online", "audiocall", "music-streaming"}
+CAT2_ACTIONS = {"chat", "browsing", "search", "social-post", "open-email", "directions"}
 
 
 def parse_args():
-    p = argparse.ArgumentParser(description="Training Dataset Generator")
+    p = argparse.ArgumentParser(description="Cat1/Cat2 Training Dataset Generator")
     p.add_argument("--interval", type=float, default=5.0, help="Reporting interval (seconds)")
     p.add_argument("--min-duration", type=float, default=150.0, help="Minimum total simulation duration (seconds)")
     p.add_argument("--max-duration", type=float, default=450.0, help="Maximum total simulation duration (seconds)")
-    p.add_argument("--runs", type=int, default=5, help="Number of distinct output runs to generate")
+    p.add_argument("--runs", type=int, default=15, help="Number of distinct output runs to generate")
     p.add_argument("--base-time", type=str, default=None, help="Base time ISO 8601")
-    p.add_argument("--output-dir", type=str, default="ees_training_data", help="Output directory")
+    p.add_argument("--output-dir", type=str, default="cat1_cat2_training_data", help="Output directory")
     return p.parse_args()
 
 
@@ -49,7 +50,7 @@ def iso_format(dt: datetime) -> str:
     return dt.strftime("%Y-%m-%dT%H:%M:%S") + "Z"
 
 
-# ── From simulate_ue.py ───────────────────────────────────────────────
+# ── Packet Reading Logic ──────────────────────────────────────────────
 def find_session_files(action: str) -> list:
     """Find all Parquet files under Combined_Dataset/<action>/*"""
     files = []
@@ -66,9 +67,11 @@ def read_session_packets(file_path: Path) -> tuple:
     df = pd.read_parquet(file_path)
     header = df.columns.tolist()
     
-    # Fill NA with empty string, convert to str
-    df = df.fillna("")
-    rows = df.astype(str).values.tolist()
+    # Convert all columns to string, then fill NA with empty string
+    df = df.astype(str)
+    # pandas astype(str) often converts NaN to the literal string "nan" or "<NA>"
+    df = df.replace({"nan": "", "<NA>": "None", "None": "", "NaN": ""}) 
+    rows = df.values.tolist()
     return header, rows
 
 
@@ -80,9 +83,10 @@ def parse_timestamp(value: str) -> float:
 
 
 def build_flow_packets(action: str, start: float, duration: float, ue_ip: str) -> list:
-    """Read dataset CSVs and build packet rows mapping src/dst IPs."""
+    """Read dataset Parquet files and build packet rows mapping src/dst IPs."""
     session_files = find_session_files(action)
     if not session_files:
+        print(f"[WARN] No session files found for action: {action}")
         return []
         
     random.shuffle(session_files)
@@ -97,7 +101,12 @@ def build_flow_packets(action: str, start: float, duration: float, ue_ip: str) -
         sf = session_files[file_idx % len(session_files)]
         file_idx += 1
         
-        header, rows = read_session_packets(sf)
+        try:
+            header, rows = read_session_packets(sf)
+        except Exception as e:
+            print(f"[ERR] Failed to read {sf}: {e}")
+            continue
+
         if not rows:
             continue
             
@@ -126,13 +135,17 @@ def build_flow_packets(action: str, start: float, duration: float, ue_ip: str) -
             direction = row[dir_col].strip()
             pkt_len = int(float(row[len_col])) if row[len_col] else 0
 
-            # Store absolute minimum info required for EES bucketing: timestamp, direction, len, action
+            # Keep track of from which parquet this data came
+            session_file_name = sf.name
+
+            # Store minimum info required for EES bucketing: timestamp, direction, len, action
             collected.append({
                 "ts": adj_ts,
                 "direction": direction,
                 "len": pkt_len,
-                "action": action, # We tag individual packets with their action for grounding
-                "ue_ip": ue_ip
+                "action": action, # Retaining original action for labels
+                "ue_ip": ue_ip,
+                "session_file": session_file_name
             })
             
             last_included_rel_ts = src_rel_ts
@@ -151,12 +164,12 @@ def build_flow_packets(action: str, start: float, duration: float, ue_ip: str) -
 # ── Scenario Generation & Main Logic ──────────────────────────────────
 
 def get_available_actions():
-    """Scan Combined_Dataset excluding forbidden ones."""
+    """Scan Combined_Dataset."""
     available = []
     if not DATASET_PATH.exists():
         return available
     for act_dir in DATASET_PATH.iterdir():
-        if act_dir.is_dir() and act_dir.name not in EXCLUDED_CATEGORIES:
+        if act_dir.is_dir():
             available.append(act_dir.name)
     return available
 
@@ -169,23 +182,29 @@ def main():
         print(f"[ERR] No valid datasets found in {DATASET_PATH}")
         sys.exit(1)
         
-    heavy_pool = list(HEAVY_ACTIONS.intersection(available_actions))
-    light_pool = list(LIGHT_ACTIONS.intersection(available_actions))
+    cat1_pool = list(CAT1_ACTIONS.intersection(available_actions))
+    cat2_pool = list(CAT2_ACTIONS.intersection(available_actions))
     
-    # Fallback if pools are empty after intersection
-    if not heavy_pool: heavy_pool = available_actions
-    if not light_pool: light_pool = available_actions
+    # Validation checks
+    if not cat1_pool:
+        print("[ERR] No Cat1 actions found in dataset.")
+        sys.exit(1)
+    if not cat2_pool:
+        print("[ERR] No Cat2 actions found in dataset.")
+        sys.exit(1)
 
     print("=" * 60)
-    print("Training Dataset Generator (Multi-Run mode, 3 UEs per run)")
+    print("Cat1/Cat2 Training Dataset Generator")
     print(f"  Runs requested  : {args.runs}")
     print(f"  Duration Range  : {args.min_duration}s - {args.max_duration}s")
     print(f"  Reporting Intv  : {args.interval}s")
+    print(f"  Cat1 Pool (Real-time): {cat1_pool}")
+    print(f"  Cat2 Pool (Bursty)   : {cat2_pool}")
     print("=" * 60)
 
     # Base Time
     base_time = datetime.fromisoformat(args.base_time.replace("Z", "+00:00")) if args.base_time else datetime.now(timezone.utc)
-    out_dir = Path(args.output_dir)
+    out_dir = Path(SCRIPT_DIR / args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     
     for run_id in range(1, args.runs + 1):
@@ -205,38 +224,60 @@ def main():
         for ue in ues:
             ip = ue["ip"]
             
-            # Randomize phase cuts per UE
-            cut1 = random.uniform(0.2, 0.45)
-            cut2 = random.uniform(0.2, 0.45)
+            # For each UE, we split their timeline into 2 or 3 phases to simulate transitions.
+            num_phases = random.choice([2, 3])
             
-            dur_p1 = run_duration * cut1
-            dur_p2 = run_duration * cut2
-            dur_p3 = run_duration - dur_p1 - dur_p2
+            if num_phases == 2:
+                cut1 = random.uniform(0.3, 0.7)
+                dur_p1 = run_duration * cut1
+                dur_p2 = run_duration - dur_p1
+                
+                # Assign modes, either Cat1->Cat2 or Cat2->Cat1
+                if random.choice([True, False]):
+                    modes = ["Cat1", "Cat2"]
+                else:
+                    modes = ["Cat2", "Cat1"]
+                
+                t_starts = [0.0, dur_p1]
+                durs = [dur_p1, dur_p2]
+                
+            else: # 3 phases
+                cut1 = random.uniform(0.2, 0.45)
+                cut2 = random.uniform(0.2, 0.45)
+                dur_p1 = run_duration * cut1
+                dur_p2 = run_duration * cut2
+                dur_p3 = run_duration - dur_p1 - dur_p2
+                
+                # Examples: Cat1->Cat2->Cat1 or Cat2->Cat1->Cat2
+                if random.choice([True, False]):
+                    modes = ["Cat1", "Cat2", "Cat1"]
+                else:
+                    modes = ["Cat2", "Cat1", "Cat2"]
+                
+                t_starts = [0.0, dur_p1, dur_p1 + dur_p2]
+                durs = [dur_p1, dur_p2, dur_p3]
             
-            t_start_p1 = 0.0
-            t_start_p2 = dur_p1
-            t_start_p3 = dur_p1 + dur_p2
-            
-            # Phase 1: Baseline
-            p1_h = random.choice(heavy_pool)
-            pkts = build_flow_packets(p1_h, t_start_p1, dur_p1, ip)
-            all_packets.extend(pkts)
-            
-            # Phase 2: Mixed
-            p2_h = random.choice(heavy_pool)
-            p2_l = random.choice(light_pool)
-            pkts_h = build_flow_packets(p2_h, t_start_p2, dur_p2, ip)
-            pkts_l = build_flow_packets(p2_l, t_start_p2, dur_p2, ip)
-            all_packets.extend(pkts_h)
-            all_packets.extend(pkts_l)
-            
-            # Phase 3: Extreme 
-            p3_h1 = random.choice(heavy_pool)
-            p3_h2 = random.choice([h for h in heavy_pool if h != p3_h1] or heavy_pool)
-            pkts_e1 = build_flow_packets(p3_h1, t_start_p3, dur_p3, ip)
-            pkts_e2 = build_flow_packets(p3_h2, t_start_p3, dur_p3, ip)
-            all_packets.extend(pkts_e1)
-            all_packets.extend(pkts_e2)
+            for phase_idx in range(num_phases):
+                mode = modes[phase_idx]
+                t_start = t_starts[phase_idx]
+                p_dur = durs[phase_idx]
+                
+                if mode == "Cat1":
+                    action = random.choice(cat1_pool)
+                else:
+                    action = random.choice(cat2_pool)
+                
+                # Add packets for this phase
+                pkts = build_flow_packets(action, t_start, p_dur, ip)
+                all_packets.extend(pkts)
+                
+                # Optionally add some background noise (a second concurrent action) a small percentage of time
+                if random.random() < 0.2:
+                    noise_mode = "Cat1" if mode == "Cat2" else "Cat2"
+                    noise_pool = cat1_pool if noise_mode == "Cat1" else cat2_pool
+                    noise_action = random.choice(noise_pool)
+                    pkts_noise = build_flow_packets(noise_action, t_start, p_dur, ip)
+                    all_packets.extend(pkts_noise)
             
         all_packets.sort(key=lambda x: x["ts"])
         print(f"Run {run_id:02d} ({run_duration:5.1f}s): Generated {len(all_packets)} packets.")
@@ -330,7 +371,7 @@ def main():
                 }
                 notification_items.append(item)
                 
-                # Record label
+                # Record label maintaining original actions, like 'videocall|chat'
                 labels_str = "|".join(sorted(list(b["labels"])))
                 labels_rows.append([
                     win_idx,
@@ -355,6 +396,11 @@ def main():
         labels_path = out_dir / f"training_labels_run{run_id:03d}.parquet"
         df_labels = pd.DataFrame(labels_rows[1:], columns=labels_rows[0])
         df_labels.to_parquet(labels_path, index=False, compression="snappy")
+
+        # Write Packet-by-Packet Parquet for this run
+        packets_path = out_dir / f"training_packets_run{run_id:03d}.parquet"
+        df_packets = pd.DataFrame(all_packets)
+        df_packets.to_parquet(packets_path, index=False, compression="snappy")
 
     print(f"\nSaved {args.runs} separate runs to: {out_dir}")
     print("=" * 60)

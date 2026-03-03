@@ -15,7 +15,6 @@ If a session is shorter than the requested duration, additional sessions
 are automatically concatenated to fill the time.
 """
 
-import csv
 import json
 import os
 import random

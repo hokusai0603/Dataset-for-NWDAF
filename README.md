@@ -77,7 +77,7 @@ Combined_Dataset/
 
 ### Unified Column Format
 
-Every CSV file contains exactly these 16 standardized columns:
+Every Parquet file contains exactly these 16 standardized columns:
 
 | # | Column | Description |
 | ---: | :--- | :--- |
@@ -164,7 +164,7 @@ Composes realistic multi-UE traffic from real session data based on a scenario c
 ### Step 3 — Package as UPF-EES Notifications *(optional)*
 
 ```bash
-python upf_ees_packager.py simulated_traffic.csv --interval 30 --base-time 2026-01-14T12:00:00Z
+python upf_ees_packager.py simulated_traffic.parquet --interval 30 --base-time 2026-01-14T12:00:00Z
 ```
 
 Aggregates the simulated traffic into 3GPP-compliant UPF-EES notification JSON files with per-UE volume and throughput measurements.
@@ -176,7 +176,7 @@ Aggregates the simulated traffic into 3GPP-compliant UPF-EES notification JSON f
 ```json
 {
     "correlation_id": "sim_001",
-    "output_file": "simulated_traffic.csv",
+    "output_file": "simulated_traffic.parquet",
     "UEs": [
         {
             "UE_ID": "UE_001",
@@ -218,7 +218,7 @@ Aggregates the simulated traffic into 3GPP-compliant UPF-EES notification JSON f
 | Field | Required | Description |
 | :--- | :---: | :--- |
 | `correlation_id` | No | Identifier for this simulation run |
-| `output_file` | No | Output CSV filename (default: `simulated_ue_traffic.csv`) |
+| `output_file` | No | Output Parquet filename (default: `simulated_ue_traffic.parquet`) |
 | `UEs[].UE_ID` | Yes | Unique identifier for the UE |
 | `UEs[].IP_address` | Yes | UE IPv4 address (overwrites client-side IPs in packets) |
 | `flows[].action` | Yes | Must match an `<action>` folder in `Combined_Dataset/` |
@@ -236,13 +236,13 @@ Aggregates the simulated traffic into 3GPP-compliant UPF-EES notification JSON f
    - Uplink (`direction=0`): `src_ip` → UE's IP
    - Downlink (`direction=1`): `dst_ip` → UE's IP
 4. **Timestamp Rebasing** — Each flow's packets are shifted to start at the configured `start` time.
-5. **Merging** — All UEs' packets are merged into a single time-sorted CSV.
+5. **Merging** — All UEs' packets are merged into a single time-sorted Parquet.
 
 ### Output Files
 
 | File | Description |
 | :--- | :--- |
-| `simulated_traffic.csv` | Merged packet-level CSV with `ue_id`, `ue_ip`, `flow_id`, `adjusted_timestamp` columns prepended to the standard 16 columns |
+| `simulated_traffic.parquet` | Merged packet-level Parquet with `ue_id`, `ue_ip`, `flow_id`, `adjusted_timestamp` columns prepended to the standard 16 columns |
 | `simulated_traffic.meta.json` | Session provenance — records which source files were used for each flow. **Can be used as input for deterministic replay** (see below) |
 
 ### Deterministic Replay
@@ -252,11 +252,11 @@ The output `meta.json` has the same structure as the input config, with an addit
 ```bash
 # 1. Normal run (random session selection)
 python simulate_ue.py scenario_config.json
-# → simulated_traffic.csv + simulated_traffic.meta.json
+# → simulated_traffic.parquet + simulated_traffic.meta.json
 
 # 2. Replay (deterministic — uses the same sessions in the same order)
 python simulate_ue.py simulated_traffic.meta.json
-# → identical simulated_traffic.csv
+# → identical simulated_traffic.parquet
 ```
 
 When `file_path` is present, the simulator skips random selection and uses those exact files in order. Flows in replay mode are tagged with `[REPLAY]` in the console output.
@@ -268,12 +268,12 @@ When `file_path` is present, the simulator skips random selection and uses those
 Converts simulated traffic into 3GPP UPF Event Exposure Service (EES) notification format.
 
 ```bash
-python upf_ees_packager.py simulated_traffic.csv --interval 30 --base-time 2026-01-14T12:00:00Z
+python upf_ees_packager.py simulated_traffic.parquet --interval 30 --base-time 2026-01-14T12:00:00Z
 ```
 
 | Argument | Default | Description |
 | :--- | :--- | :--- |
-| `csv_file` | *(required)* | Path to `simulated_traffic.csv` |
+| `csv_file` | *(required)* | Path to `simulated_traffic.parquet` |
 | `--interval` | `30` | Reporting period in seconds |
 | `--base-time` | current UTC | Simulation start time (ISO 8601) |
 | `--output-dir` | `upf_ees_output/` | Output directory for JSON files |
